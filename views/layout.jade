@@ -2,6 +2,12 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    link(rel='stylesheet', href='/lib/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/default.css')
+  body(ng-app="steven")
     block content
+    script(src="/lib/angular.min.js")
+    script(src="/lib/lazyload.min.js")
+    script(src="/lib/ng-route.min.js")
+    script(src="/js/init.js")
+

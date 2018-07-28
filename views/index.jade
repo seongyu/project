@@ -1,5 +1,8 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div(class="container")
+    include ./header.html
+    div(class="row" style="margin-top:64px;")
+      include ./menu.html
+      ng-view(css="col col-md-10")
