@@ -16,7 +16,16 @@ router.get('/', function(req, res, next) {
 
 /* set Data */
 router.post('/', function(req, res, next) {
-  res.send(true);
+    var param = req.body;
+    
+
+    var sql = 'insert into deviceDB.DeviceLog SET ?';
+    param = JSON.parse(event.body);
+
+    db.query(sql,param)
+    .then((res) => {
+        res.send(true);
+    })
 });
 
 module.exports = router;

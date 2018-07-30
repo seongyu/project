@@ -3,13 +3,11 @@ var router = express.Router();
 
 var db = require('../database/db');
 
-// db.query('select * from tblDevice order by id desc limit 10')
-// .then(function(res){
-//   console.log(res);
-// });
-
 /* Registration Device */
 router.post('/', function(req, res, next) {
+  console.log(req.body)
+  res.send(true);
+  return null;
   var param = req.body;
   var sql = 'select * from tblDeviceInfo where deviceID = ? and placeName = ?';
   db.query(sql,{deviceID:param.deviceID,placeName:param.placeName})

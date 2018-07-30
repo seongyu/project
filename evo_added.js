@@ -3,18 +3,22 @@ var HOST = 'http://localhost';
 var PORT = 4001
 
 // 여기에 설정할 파라메터 리스트
-// 1. 설치장소 : placeName
+// 1. 설치장소 : siteName
 // 2. 업체명 : companyName
-// 3. 장치ID : deviceID
-// 4. 장치명 : deviceName
+// 이거 반드시 기입해주세요.
 var GLOBAL_PARAM = {
-  placeName : '',
   companyName : '',
-  deviceID : '',
-  deviceName : ''
+  siteName : '',
+  devices : [
+  {'varAddr':'8528','varLabel':'doilabel'},
+  {'varAddr':'8529','varLabel':'doi2label'} // <= 사용할 모듈 갯수만큼 넣어주세요
+  ]
 }
 
+var DEVICE_SEQ = null;
+
 // 다른브라우저에서 오류나는 경우가 있어서 추가함
+// evo.js에도 넣어주세요
 function GetXmlHttpObject()
 { 
     var objXMLHttp=null;
@@ -29,6 +33,7 @@ function GetXmlHttpObject()
     return objXMLHttp;
 }
 
+// Global function. 삭제하지 마세영.
 var request = function(uri,param){
   
   var url = [HOST,':',PORT,'/'].join("");
@@ -53,13 +58,14 @@ var request = function(uri,param){
   http.send(JSON.stringify(param));
 }
 
-request('register',GLOBAL_PARAM);
+request('register', GLOBAL_PARAM,function(data){
+
+},function(err){
+  console.log(err);
+  process.exit(-1);
+});
 
 function saveData(e,c){
-
-  // console.log("e = ",e); //address
-  // console.log("c = ",c); //value 
-
   // value 값이 없으면 저장 안함
   if(c === null 
     || c === isNaN 
@@ -70,32 +76,15 @@ function saveData(e,c){
   }
 
   //name 가져오기
-  var desc = "";
+  var arr = [];
   var table = document.getElementsByTagName('table')[0];
   var rows = table.rows;
-  for (var i = 1; i < rows.length; i++) {
-      var rowText = rows[i].getElementsByTagName('td')[1].innerHTML;
-      var device = rows[i].getElementsByTagName('td')[0].innerHTML;
-      if (e.includes(device)) {
-        desc = rowText;
-      }
-  }
+  rows.forEach(function(e,i,v){
+    var device = GLOBAL_PARAM.devices.find(function(j){return j.varAddr==e.getElementsByTagName('td')[0].innerHTML && j.varLabel==e.getElementsByTagName('td')[1].innerHTML})
+    var item = {deviceSeq : device.deviceSeq,varStatus : e.getElementsByTagName('td')[2].innerHTML};
+    arr.push(item);
+  })
 
-  // DB에 저장할 body 만들기
-  var param = {
-    "deviceID":e,
-    "value":c,
-    "description":desc,
-    "datetime":(new Date().toLocaleString())
-  };
-
-  // 추가로 넣고싶은 파라메터를 아래와 같이 등록해주세요.
-  // 정확히 어떤 파라메터를 넣고싶은지 정하고 얘기해주시면 서버에 추가로 받을수있게 만들어둘게요-.
-  // ex >
-  // param.deviceName = GLOBAL_PARAM.deviceName
-  // param.companyName = GLROBAL_PARAM.companyName
-  // 
-
-  request('data',param)
+  request('data',arr)
 }
 
