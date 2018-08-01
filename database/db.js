@@ -2,20 +2,20 @@ var mysql = require('mysql');
 var promise = require('q');
 
 var pool = mysql.createPool({
-    connectionLimit : 10,
-    host     : 'device.cpejzij0uvoq.ap-northeast-2.rds.amazonaws.com',
-    user     : 'steven',
-    password : 'stevenfighting!',
-    database : 'deviceDB'
+    connectionLimit: 10,
+    host: 'device.cpejzij0uvoq.ap-northeast-2.rds.amazonaws.com',
+    user: 'steven',
+    password: 'stevenfighting!',
+    database: 'deviceDB'
 });
 
-exports.query = function(sql,param){
+exports.query = function(sql, param) {
     var defer = promise.defer();
     pool.getConnection(function(err, conn) {
-        conn.query(sql, param,function(err,rows){
-            if(err){
+        conn.query(sql, param, function(err, rows) {
+            if (err) {
                 defer.reject(err)
-            }else{
+            } else {
                 rows = JSON.parse(JSON.stringify(rows));
                 defer.resolve(rows);
             }
@@ -25,3 +25,29 @@ exports.query = function(sql,param){
 
     return defer.promise;
 };
+
+
+exports.querySet = {
+    monitor_device_modules: function(deviceName, siteName, companyName) {
+        var tpl = ['select * from  ',
+            '(SELECT b.*, a.varStatus, a.eventTime FROM DeviceLog as a ',
+            'left join DeviceInfo as b on a.deviceSeq = b.deviceSeq ',
+            'where b.deviceName = "', deviceName,
+            '" and b.siteName = "', siteName,
+            '" and b.companyName = "', companyName,
+            '" order by eventTime desc) as c ',
+            'group by c.deviceSeq;'
+        ].join("");
+        return tpl;
+    },
+    monitor_status_modules: function(devices){
+        var tpl = ['select deviceSeq, varStatus from (select * from DeviceLog where deviceSeq in ('];
+        devices.forEach((e)=>{
+            tpl.push(e+', ')
+        });
+        tpl[tpl.length-1] = tpl[tpl.length-1].slice(0,-2);
+        tpl.push(' order by eventTime desc) as a group by deviceSeq;');
+
+        return tpl.join("");
+    }
+}

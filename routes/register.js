@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var db = require('../database/db');
-var data = require('../controller/data')
+var itf = require('../controller/interface')
 /* Registration Device */
 router.post('/', function(req, res, next) {
   res.send(true);
@@ -14,13 +14,13 @@ router.post('/', function(req, res, next) {
     res.send(rtn);
   })
 
-  var sql = 'select * from tblDeviceInfo where deviceID = ? and placeName = ?';
+  var sql = 'select * from DeviceInfo where deviceID = ? and placeName = ?';
   db.query(sql,{deviceID:param.deviceID,placeName:param.placeName})
   .then(function(res){
     if(res.length > 0){
       res.send(true);
     }else{
-      sql = 'insert into tblDeviceInfo (deviceID, deviceName, placeName, companyName) set (?,?,?,?)';
+      sql = 'insert into DeviceInfo (deviceID, deviceName, placeName, companyName) set (?,?,?,?)';
       var value = {
         deviceID : param.deviceID,
         deviceName : param.deviceName,

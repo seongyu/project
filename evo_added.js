@@ -1,21 +1,16 @@
 // var HOST = 'ec2-13-209-72-13.ap-northeast-2.compute.amazonaws.com';
 var HOST = 'http://localhost';
-var PORT = 4001
+var PORT = 4001;
 
 // 여기에 설정할 파라메터 리스트
 // 1. 설치장소 : siteName
 // 2. 업체명 : companyName
 // 이거 반드시 기입해주세요.
 var GLOBAL_PARAM = {
-  companyName : '',
-  siteName : '',
-  devices : [
-  {'varAddr':'8528','varLabel':'doilabel'},
-  {'varAddr':'8529','varLabel':'doi2label'} // <= 사용할 모듈 갯수만큼 넣어주세요
-  ]
+  companyName : 'LeonTest',
+  siteName : 'LeonTest',
+  deviceName: 'test'
 }
-
-var DEVICE_SEQ = null;
 
 // 다른브라우저에서 오류나는 경우가 있어서 추가함
 // evo.js에도 넣어주세요
@@ -58,13 +53,6 @@ var request = function(uri,param){
   http.send(JSON.stringify(param));
 }
 
-request('register', GLOBAL_PARAM,function(data){
-
-},function(err){
-  console.log(err);
-  process.exit(-1);
-});
-
 function saveData(e,c){
   // value 값이 없으면 저장 안함
   if(c === null 
@@ -79,12 +67,24 @@ function saveData(e,c){
   var arr = [];
   var table = document.getElementsByTagName('table')[0];
   var rows = table.rows;
-  rows.forEach(function(e,i,v){
-    var device = GLOBAL_PARAM.devices.find(function(j){return j.varAddr==e.getElementsByTagName('td')[0].innerHTML && j.varLabel==e.getElementsByTagName('td')[1].innerHTML})
-    var item = {deviceSeq : device.deviceSeq,varStatus : e.getElementsByTagName('td')[2].innerHTML};
-    arr.push(item);
-  })
 
+  for(var i in rows){
+    var row  = rows[i];
+    if(typeof row ==='object' && row.getElementsByTagName('td')[0]){
+      var item = {
+        varAddr : row.getElementsByTagName('td')[0].innerHTML,
+        varLabel : row.getElementsByTagName('td')[1].innerHTML,
+        varStatus : row.getElementsByTagName('td')[2].innerHTML,
+        deviceName : GLOBAL_PARAM.deviceName,
+        companyName : GLOBAL_PARAM.companyName,
+        siteName : GLOBAL_PARAM.siteName
+      };
+      arr.push(item);
+    }
+    
+  }
+  // console.log(arr);
   request('data',arr)
 }
 
+// saveData(1,1);

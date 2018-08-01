@@ -54,7 +54,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/register',register);
+// app.use('/register',register);
 app.use('/data', data);
 app.use('/',view);
 
