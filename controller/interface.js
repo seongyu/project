@@ -13,21 +13,21 @@ var testData = {
 var itf = {};
 
 var _register = (param,cb) => {
-    var res_itf = { status: false, deviceSeq: null };
+    var res_itf = { status: false, moduleSeq: null };
     var sql = 'select * from DeviceInfo where deviceName = ? and varAddr = ? and varLabel = ? and companyName = ? and siteName = ?';
     var queryParam = [param.deviceName, param.varAddr, param.varLabel, param.companyName, param.siteName]
     db.query(sql, queryParam)
         .then((res) => {
             if (res.length > 0) {
                 res_itf.status = true;
-                res_itf.deviceSeq = res[0].deviceSeq;
+                res_itf.moduleSeq = res[0].moduleSeq;
                 cb(res_itf)
             } else {
                 sql = 'insert into DeviceInfo (varAddr, varLabel, companyName, siteName) values (?,?,?,?,?);';
 
                 db.query(sql, queryParam).then((res) => {
                     res_itf.status = true;
-                    res_itf.deviceSeq = res.insertId
+                    res_itf.moduleSeq = res.insertId
                     cb(res_itf)
                 }, (err) => {
                     cb(res_itf)
@@ -39,8 +39,8 @@ var _register = (param,cb) => {
 };
 
 var _writeLog = (param,cb) => {
-    var sql = 'insert into DeviceLog (deviceSeq, varStatus) values (?,?);';
-    var queryParam = [param.deviceSeq,param.varStatus];
+    var sql = 'insert into DeviceLog (moduleSeq, varStatus) values (?,?);';
+    var queryParam = [param.moduleSeq,param.varStatus];
     db.query(sql,queryParam)
     .then((res) => {
         cb({status:true})
@@ -49,13 +49,15 @@ var _writeLog = (param,cb) => {
     })
 };
 
+// for Device to get Data
+// input Object {}
 itf.crawler = (tdts,cb) => {
     var flist = [];
     promise.forEach(tdts,(e)=>{
         var defer = promise.defer();
 
         _register(e,(res) => {
-            e.deviceSeq = res.deviceSeq;
+            e.moduleSeq = res.moduleSeq;
             _writeLog(e, (res1) => {
                 defer.resolve({status:true})
             });
@@ -68,20 +70,47 @@ itf.crawler = (tdts,cb) => {
     });
 }
 
+// parameter에 따른 모듈 정보 획득
+// input Object {companyName,siteName,deviceName}
 itf.get_modules_device = (param,cb) => {
     var response = { status: false, data: [] };
-    var sql = 'select * from DeviceInfo where deviceName = ? and siteName = ? and companyName = ?;';
-    var queryParam = [param.deviceName,param.siteName,param.companyName];
+    var sql = 'select * from DeviceInfo';
+    var queryParam = [];
+    var obj = Object.keys(param);
+    if(obj.length>0){
+        sql = sql + ' where '
+        obj.forEach((e) => {
+            var t = e + ' = ? and ';
+            sql = sql + t;
+            queryParam.push(param[e]);
+        });
+
+        sql = sql.slice(0,-4);
+    }
+    // deviceName = ? and siteName = ? and companyName = ?;
     db.query(sql, queryParam)
     .then((res) => {
         response.status = true;
-        response.data = res;
+        var data = [];
+        res.forEach((e) => {
+            data[e.companyName] ? null : data[e.companyName] = {};
+            data[e.companyName][e.siteName] ? null : data[e.companyName][e.siteName] = {};
+            data[e.companyName][e.siteName][e.deviceName] ? null : data[e.companyName][e.siteName][e.deviceName] = [];
+            data[e.companyName][e.siteName][e.deviceName].push({
+                moduleSeq : e.moduleSeq,
+                varAddr : e.varAddr,
+                varLabel : e.varLabel
+            })
+        })
+        response.data = data;
+        cb(response);
     },(err) => {
         cb(response);
     })
 };
 
-
+// 각 모듈의 마지막 데이터 for monitoring
+// input Array (moduleSeq)
 itf.get_status_modules = (param,cb) => {
     var response = { status: false, data: [] };
     var sql = db.querySet.monitor_status_modules(param);
@@ -94,6 +123,29 @@ itf.get_status_modules = (param,cb) => {
         cb(response);
     })
 };
+
+// 모든 회사/장비 그룹핑된 모듈 명
+itf.get_all_flag = (cb) => {
+    var response = { status: false, data: [] };
+    var sql = 'select companyName from DeviceInfo group by companyName';
+    db.query(sql)
+    .then((result1) => {
+
+        var sql = 'select deviceName, companyName from DeviceInfo group by deviceName, companyName';
+        db.query(sql)
+        .then((result2) => {
+            var data = {};
+            result1.forEach((e) => {
+                var obj = {};
+                var jrr = result2.filter((j) => {return j.companyName == e.companyName});
+                data[e.companyName] = jrr;
+            });
+            response.status = true;
+            response.data = data;
+            cb(response);
+        })
+    })
+}
 
 itf.monitor_device = (param,cb) => {
     var response = { status: false, data: [] };

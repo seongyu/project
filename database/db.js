@@ -31,22 +31,22 @@ exports.querySet = {
     monitor_device_modules: function(deviceName, siteName, companyName) {
         var tpl = ['select * from  ',
             '(SELECT b.*, a.varStatus, a.eventTime FROM DeviceLog as a ',
-            'left join DeviceInfo as b on a.deviceSeq = b.deviceSeq ',
+            'left join DeviceInfo as b on a.moduleSeq = b.moduleSeq ',
             'where b.deviceName = "', deviceName,
             '" and b.siteName = "', siteName,
             '" and b.companyName = "', companyName,
             '" order by eventTime desc) as c ',
-            'group by c.deviceSeq;'
+            'group by c.moduleSeq;'
         ].join("");
         return tpl;
     },
     monitor_status_modules: function(devices){
-        var tpl = ['select deviceSeq, varStatus from (select * from DeviceLog where deviceSeq in ('];
+        var tpl = ['select moduleSeq, varStatus from (select * from DeviceLog where moduleSeq in ('];
         devices.forEach((e)=>{
             tpl.push(e+', ')
         });
         tpl[tpl.length-1] = tpl[tpl.length-1].slice(0,-2);
-        tpl.push(' order by eventTime desc) as a group by deviceSeq;');
+        tpl.push(' order by eventTime desc) as a group by moduleSeq;');
 
         return tpl.join("");
     }

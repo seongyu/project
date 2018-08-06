@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
     var param = req.body;
     
-    itf.crawler(param,()=>{
+    itf.crawler(param, () => {
         res.send(true);    
     })
 });
