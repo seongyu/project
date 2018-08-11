@@ -71,50 +71,12 @@ itf.crawler = (tdts,cb) => {
     });
 }
 
-// parameter에 따른 모듈 정보 획득
-// input Object {companyName,siteName,deviceName}
-itf.get_modules_device = (param,cb) => {
-    var response = { status: false, data: [] };
-    var sql = 'select * from DeviceInfo';
-    var queryParam = [];
-    var obj = Object.keys(param);
-    if(obj.length>0){
-        sql = sql + ' where '
-        obj.forEach((e) => {
-            var t = e + ' = ? and ';
-            sql = sql + t;
-            queryParam.push(param[e]);
-        });
-
-        sql = sql.slice(0,-4);
-    }
-    // deviceName = ? and siteName = ? and companyName = ?;
-    db.query(sql, queryParam)
-    .then((res) => {
-        response.status = true;
-        var data = [];
-        res.forEach((e) => {
-            data[e.companyName] ? null : data[e.companyName] = {};
-            data[e.companyName][e.siteName] ? null : data[e.companyName][e.siteName] = {};
-            data[e.companyName][e.siteName][e.deviceName] ? null : data[e.companyName][e.siteName][e.deviceName] = [];
-            data[e.companyName][e.siteName][e.deviceName].push({
-                moduleSeq : e.moduleSeq,
-                varAddr : e.varAddr,
-                varLabel : e.varLabel
-            })
-        })
-        response.data = data;
-        cb(response);
-    },(err) => {
-        cb(response);
-    })
-};
-
 // 각 모듈의 마지막 데이터 for monitoring
 // input Array (moduleSeq)
 itf.get_status_modules = (param,cb) => {
     var response = { status: false, data: [] };
     var sql = db.querySet.monitor_status_modules(param);
+    
     db.query(sql)
     .then((res) => {
         response.status = true;
@@ -126,49 +88,31 @@ itf.get_status_modules = (param,cb) => {
 };
 
 // 모든 회사/장비 그룹핑된 모듈 명
-itf.get_all_flag = (cb) => {
+itf.get_all_flag = (param, cb) => {
     var response = { status: false, data: [] };
-    var data = [];
+    var data = {};
     var sql = 'select * from DeviceInfo';
-    db.query(sql)
+    sql = param && param.companyName ? sql + ' where companyName = ?' : sql;
+    db.query(sql,param && param.companyName ? param.companyName : null)
     .then((result1) => {
 
         //deeper 1. company
         var grouping = util.groupBy(result1,(item)=>{return item.companyName});
-        // data에 companyName 배치
-        data = Object.keys(grouping);
+        var groupingKey = Object.keys(grouping);
 
-        data.forEach((e)=>{
+        groupingKey.forEach((e)=>{
             //deefer 2. site
+            var it1 = {};
             var groupingA = util.groupBy(grouping[e],(item)=>{return item.siteName});
-        })
-
-        var data = util.groupBy(result1,(item)=>{return item.companyName});
-        Object.keys(data)
-        .forEach((e)=>{
-
-        })
-
-
-        result1.forEach((e) => {
-            var obj = {};
-            var jrr = result2.filter((j) => {return j.companyName == e.companyName});
-            data[e.companyName] = jrr;
-        });
-
-        var sql = 'select deviceName, companyName from DeviceInfo';
-        db.query(sql)
-        .then((result2) => {
-            var data = {};
-            result1.forEach((e) => {
-                var obj = {};
-                var jrr = result2.filter((j) => {return j.companyName == e.companyName});
-                data[e.companyName] = jrr;
+            groupingAKey = Object.keys(groupingA);
+            //defer 3. device
+            groupingAKey.forEach((j)=> {
+                it1[j] = util.groupBy(groupingA[j],(item)=>{return item.deviceName});
             });
-            response.status = true;
-            response.data = data;
-            cb(response);
+            data[e] = it1
         })
+
+        cb(data);
     })
 }
 
@@ -185,6 +129,20 @@ itf.monitor_device = (param,cb) => {
         response.status = true;
         response.data = res;
         cb(response);
+    },(err) => {
+        cb(response);
+    })
+}
+
+itf.get_addr_table = (cb) => {
+    var response = { status: false, data: [] };
+    var sql = 'select * from tblAddrTitleMapping order by varAddr;';
+    db.query(sql)
+    .then((res)=>{
+        var grouping = util.groupBy(res,(item)=>{return item.varType});
+        response.status = true;
+        response.data = grouping;
+        cb(response)
     },(err) => {
         cb(response);
     })
@@ -209,15 +167,15 @@ var test = (param,cb) => {
 // 
 // 
 
-var item = util.groupBy([
-    {type:"Dog", age: 3, name:"Spot"},
-    {type:"Cat", age: 3, name:"Tiger"},
-    {type:"Dog", age: 4, name:"Rover"}, 
-    {type:"Cat", age: 3, name:"Leo"}
-], function(item){
-    return item.type
-})
+// var item = util.groupBy([
+//     {type:"Dog", age: 3, name:"Spot"},
+//     {type:"Cat", age: 3, name:"Tiger"},
+//     {type:"Dog", age: 4, name:"Rover"}, 
+//     {type:"Cat", age: 3, name:"Leo"}
+// ], function(item){
+//     return item.type
+// })
 
-console.log(item)
+// console.log(item)
 
 module.exports = itf;

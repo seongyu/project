@@ -1,3 +1,16 @@
-<nav class="navbar fixed-top navbar-light bg-light">
-  <span class="navbar-brand mb-0 h1">Navbar</span>
+<nav ng-controller="headerCtrl" class="navbar navbar-expand-lg fixed-top bg-enes">
+  <span class="navbar-brand mb-0 h1 navbar-title">에네스산전</span>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav navbar-dropdown">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="nvDrop" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{user.id}} 님, 환영합니다
+        </a>
+        <div class="dropdown-menu" aria-labelledby="nvDrop">
+          <a class="dropdown-item" href="" ng-click="logout()">LogOut</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+  
 </nav>

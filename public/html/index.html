@@ -1,0 +1,241 @@
+<nav class="navbar" style="display:inline-flex">
+    <form class="index-form">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">회사</label>
+            </div>
+            <select class="custom-select" ng-model="companyName" ng-change="selectComp(companyName)">
+                <option ng-repeat="comp in companyNames">{{comp}}</option>
+            </select>
+        </div>
+    </form>
+    <form class="index-form" id="siteform" style="display:none;">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">시설</label>
+            </div>
+            <select class="custom-select" ng-model="siteName" ng-change="selectSite(siteName)">
+                <option ng-repeat="site in siteNames">{{site}}</option>
+            </select>
+        </div>
+    </form>
+    <form class="index-form" id="deviceform" style="display:none;">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">장비</label>
+            </div>
+            <select class="custom-select" ng-model="deviceName" ng-change="selectDevice(deviceName)">
+                <option ng-repeat="device in deviceNames">{{device}}</option>
+            </select>
+        </div>
+    </form>
+</nav>
+<div class="container index">
+    <div class="row">
+        <div class="col-3">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>DI</th>
+                        <th>라벨</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="di in table['DIGITAL INPUT']" id="{{di.varAddr}}">
+                      <td>{{di.shortName}}</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-3">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>DO</th>
+                        <th>라벨</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="di in table['DIGITAL OUTPUT']" id="{{di.varAddr}}">
+                      <td>{{di.shortName}}</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-3">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>AI</th>
+                        <th>라벨</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="di in table['ANALOG INPUT']" id="{{di.varAddr}}">
+                      <td>{{di.shortName}}</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-3">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>AO</th>
+                        <th>라벨</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="di in table['ANALOG OUTPUT']" id="{{di.varAddr}}">
+                      <td>{{di.shortName}}</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-3" ng-repeat="sv in svs">
+        <table class="table table-simple table-bordered">
+          <thead>
+            <tr>
+                <th>SV</th>
+                <th>라벨</th>
+                <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr id="{{sv.varAddr}}">
+                <td>SV {{$index}}</td>
+                <td>{{sv.varLabel}}</td>
+                <td>{{sv.varStatus}}</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <nav class="navbar">
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #ff5d99;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset0" ng-change="setDataset(dataset0,'dataset0')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #a35dff;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset1" ng-change="setDataset(dataset1,'dataset1')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #64ffff;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset2" ng-change="setDataset(dataset2,'dataset2')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #e7f33d;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset3" ng-change="setDataset(dataset3,'dataset3')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #f3893d;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset4" ng-change="setDataset(dataset4,'dataset4')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #3d75f3;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset5" ng-change="setDataset(dataset5,'dataset5')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #e83df3;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset6" ng-change="setDataset(dataset6,'dataset6')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+        <form class="index-form">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" style="background-color: #3df3b0;"></label>
+                </div>
+                <select class="custom-select" ng-model="dataset7" ng-change="setDataset(dataset7,'dataset7')">
+                    <option ng-repeat="conp in conpare" value="{{conp.moduleSeq}}">{{getShortName(conp.varAddr)?getShortName(conp.varAddr).shortName : SV }} / {{conp.varLabel}}</option>
+                </select>
+            </div>
+        </form>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="my-chart" style="width:100%;height:340px">
+        <linechart data="data" options="options"></linechart>
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,6 @@
 var db = require('../database/db');
+var IFC = require('../controller/interface');
+var sha1 = require('sha-1');
 var itf = {};
 
 itf._getParam = (param) => {
@@ -22,10 +24,11 @@ itf.create = (param,cb) => {
         if(rtn.length>0){
             cb({status:false});
         }else{
+            var _password = sha1(param.password);
             sql = 'insert into Users (id, password, companyName, role) values (?,?,?,?);';
             queryParam = [
                 param.id,
-                param.password,
+                _password,
                 param.companyName,
                 param.role
             ];
@@ -70,23 +73,30 @@ itf.find = (param,cb) => {
 }
 
 itf.login = (param,cb) => {
-    if(param.id=='steven' && param.password=='administrator'){
-        return cb({status:true,data:{role:'master'}})
-    }
+    
+    var _password = sha1(param.password);
     var sql = 'select * from Users where id=? and password=? and use_yn=1;';
-    var queryParam = [param.id,param.password]
+    var queryParam = [param.id,_password]
     db.query(sql,queryParam)
     .then((rtn)=>{
         if(rtn.length > 0){
             var user = rtn[0];
             user.last_access = new Date();
             itf.update(user,(res)=>{
-                cb({status:true,data:user});
+                if(user.role.indexOf('admin') >= 0){
+                    IFC.get_all_flag(null,(data) => {
+                        user.flag = data;
+                        cb({status:true,data:user});
+                    })
+                }else{
+                    cb({status:true,data:user});
+                }
+                
             })
         }else{
             cb({status:false});
         }
     })
 }
-
+// itf.login({id:'steven',password:'administrator'},(e)=>{console.log(JSON.stringify(e))})
 module.exports = itf;

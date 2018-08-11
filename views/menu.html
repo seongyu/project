@@ -1,16 +1,19 @@
-<div class="col col-md-2">
+<div class="menu col-2" ng-controller="menuCtrl">
   <ul class="nav flex-column">
-  <li class="nav-item">
-    <a class="nav-link active" href="#">Active</a>
+  <li class="nav-item" ng-if="user.role.indexOf('admin')>=0||user.role.indexOf('m')>=0">
+    <a class="nav-link" href="" ng-href="/">실시간모니터링</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
+  <li class="nav-item" ng-if="user.role.indexOf('admin')>=0||user.role.indexOf('h')>=0">
+    <a class="nav-link" href="" ng-href="#/history">상태히스토리</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
+  <li class="nav-item" ng-if="user.role.indexOf('admin')>=0||user.role.indexOf('c')>=0">
+    <a class="nav-link" href="" ng-click="control()">원격컨트롤</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">Disabled</a>
+  <li class="nav-item dropdown" ng-if="user.role.indexOf('admin')>=0||user.role.indexOf('s')>=0">
+    <a class="nav-link dropdown-toggle" href="" ng-click="dropOpen($event)">설정</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="">계정관리</a>
+    </div>
   </li>
 </ul>
 </div>

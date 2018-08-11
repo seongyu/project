@@ -4,12 +4,12 @@ var router = express.Router();
 
 /* set Data */
 router.get('/login', function(req, res, next) {
-  res.render('index');
+  res.redirect('login')
 });
 
 /* set Data */
 router.get('/', function(req, res, next) {
-  res.redirect('login')
+  res.render('index');
 });
 
 module.exports = router;

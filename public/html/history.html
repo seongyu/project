@@ -1,0 +1,75 @@
+<nav class="navbar" style="display:inline-flex">
+    <form class="index-form">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">회사</label>
+            </div>
+            <select class="custom-select" ng-model="companyName" ng-change="selectComp(companyName)">
+                <option value="all">전체</option>
+                <option ng-repeat="comp in companyNames">{{comp}}</option>
+            </select>
+        </div>
+    </form>
+    <form class="index-form">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">시설</label>
+            </div>
+            <select class="custom-select" ng-model="siteName" ng-change="selectSite(siteName)">
+                <option value="all">전체</option>
+                <option ng-repeat="site in siteNames">{{site}}</option>
+            </select>
+        </div>
+    </form>
+    <form class="index-form">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">장비</label>
+            </div>
+            <select class="custom-select" ng-model="deviceName" ng-change="selectDevice(deviceName)">
+                <option value="all">전체</option>
+                <option ng-repeat="device in deviceNames">{{device}}</option>
+            </select>
+        </div>
+    </form>
+    <form class="index-form">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <label class="input-group-text">유형</label>
+            </div>
+            <select class="custom-select" ng-model="varAddr">
+                <option value="all">전체</option>
+                <option ng-repeat="tb in table" value="{{tb.varAddr}}">{{tb.shortName}} / {{tb.varAddr}}</option>
+            </select>
+        </div>
+    </form>
+</nav>
+<div class="container index">
+  <div class="row"> 
+    
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
