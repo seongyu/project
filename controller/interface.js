@@ -1,5 +1,6 @@
 var db = require('../database/db');
 var promise = require('q');
+var util = require('../util');
 require('q-foreach')(promise);
 
 
@@ -127,11 +128,35 @@ itf.get_status_modules = (param,cb) => {
 // 모든 회사/장비 그룹핑된 모듈 명
 itf.get_all_flag = (cb) => {
     var response = { status: false, data: [] };
-    var sql = 'select companyName from DeviceInfo group by companyName';
+    var data = [];
+    var sql = 'select * from DeviceInfo';
     db.query(sql)
     .then((result1) => {
 
-        var sql = 'select deviceName, companyName from DeviceInfo group by deviceName, companyName';
+        //deeper 1. company
+        var grouping = util.groupBy(result1,(item)=>{return item.companyName});
+        // data에 companyName 배치
+        data = Object.keys(grouping);
+
+        data.forEach((e)=>{
+            //deefer 2. site
+            var groupingA = util.groupBy(grouping[e],(item)=>{return item.siteName});
+        })
+
+        var data = util.groupBy(result1,(item)=>{return item.companyName});
+        Object.keys(data)
+        .forEach((e)=>{
+
+        })
+
+
+        result1.forEach((e) => {
+            var obj = {};
+            var jrr = result2.filter((j) => {return j.companyName == e.companyName});
+            data[e.companyName] = jrr;
+        });
+
+        var sql = 'select deviceName, companyName from DeviceInfo';
         db.query(sql)
         .then((result2) => {
             var data = {};
@@ -179,5 +204,20 @@ var test = (param,cb) => {
 // test(testData,(res)=>{
 //     console.log(res)
 // })
+// itf.get_all_flag((r) => {console.log(JSON.stringify(r))})
+// 
+// 
+// 
+
+var item = util.groupBy([
+    {type:"Dog", age: 3, name:"Spot"},
+    {type:"Cat", age: 3, name:"Tiger"},
+    {type:"Dog", age: 4, name:"Rover"}, 
+    {type:"Cat", age: 3, name:"Leo"}
+], function(item){
+    return item.type
+})
+
+console.log(item)
 
 module.exports = itf;
