@@ -155,11 +155,11 @@ itf.excelDownload = (param, cb) => {
 
     db.query(query.sql, query.param)
         .then((res) => {
-            if(res.length>0){
-                excel.download(res,(result) => {
+            if (res.length > 0) {
+                excel.download(res, (result) => {
                     cb(result);
                 });
-            }else{
+            } else {
                 cb(response)
             }
         }, (err) => {

@@ -1,90 +1,89 @@
-
 <div class="container">
-  <div class="row">
-    <div class="col-6">
-      <nav class="navbar" style="display:inline-flex">
-    <form class="index-form">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <label class="input-group-text">회사</label>
+    <div class="row">
+        <div class="col-6">
+            <nav class="navbar" style="display:inline-flex">
+                <form class="index-form">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">회사</label>
+                        </div>
+                        <select class="custom-select" ng-model="companyName" ng-change="selectComp(companyName)">
+                            <option value="all">전체</option>
+                            <option ng-repeat="comp in companyNames">{{comp}}</option>
+                        </select>
+                    </div>
+                </form>
+                <p></p>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">장소</th>
+                            <th scope="col" colspan="2">상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="site in siteNames">
+                            <td>{{site}}</td>
+                            <td>
+                                <input type="checkbox" ng-model="siteFlag[site]" ng-change="selectSite(site, siteFlag[site])" />
+                                <table border="1" style="width: 100%;" ng-if="siteFlag[site]">
+                                    <tr>
+                                        <th scope="col">장비명</th>
+                                        <th scope="col">상태</th>
+                                    </tr>
+                                    <tr ng-repeat="device in deviceNames">
+                                        <td>{{device}}</td>
+                                        <td>
+                                            <input type="checkbox" ng-model="deviceFlag[site][device]" ng-change="setFlag(site,device,deviceFlag[site][device])">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </nav>
+        </div>
+        <div class="col-6">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">실시간 모니터링</th>
+                        <th scope="col">상태 히스토리</th>
+                        <th scope="col">원격 컨트롤</th>
+                        <th scope="col">설정</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="checkbox" ng-model="role['mon']" />
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="role['his']" />
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="role['con']" />
+                        </td>
+                        <td>
+                            <input type="checkbox" ng-model="role['set']" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Username" aria-label="Username" ng-model="id" ng-readonly="update">
             </div>
-            <select class="custom-select" ng-model="companyName" ng-change="selectComp(companyName)">
-                <option value="all">전체</option>
-                <option ng-repeat="comp in companyNames">{{comp}}</option>
-            </select>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                </div>
+                <input type="password" class="form-control" placeholder="Password" aria-label="Password" ng-model="password">
+            </div>
         </div>
-    </form>
-    <p></p>
-    <table class="table table-sm table-bordered">
-      <thead>
-        <tr>
-          <th scope="col">장소</th>
-          <th scope="col" colspan="2">상태</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="site in siteNames">
-          <td>{{site}}</td>
-          <td>
-            <input type="checkbox" ng-model="siteFlag[site]" ng-change="selectSite(site, siteFlag[site])"/>
-            <table border="1" style="width: 100%;" ng-if="siteFlag[site]">
-            <tr>
-          <th scope="col">장비명</th>
-          <th scope="col">상태</th>
-        </tr>
-        <tr ng-repeat="device in deviceNames">
-          <td>{{device}}</td>
-          <td>
-            <input type="checkbox" ng-model="deviceFlag[site][device]" ng-change="setFlag(site,device,deviceFlag[site][device])">
-          </td>
-        </tr></table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-</nav>
     </div>
-    <div class="col-6">
-      <table class="table table-sm table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">실시간 모니터링</th>
-            <th scope="col">상태 히스토리</th>
-            <th scope="col">원격 컨트롤</th>
-            <th scope="col">설정</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <input type="checkbox" ng-model="role['mon']"/>
-            </td>
-            <td>
-              <input type="checkbox" ng-model="role['his']"/>
-            </td>
-            <td>
-              <input type="checkbox" ng-model="role['con']"/>
-            </td>
-            <td>
-              <input type="checkbox" ng-model="role['set']"/>
-            </td>
-
-          </tr>
-        </tbody>
-      </table>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-user"></i></span>
-        </div>
-        <input type="text" class="form-control" placeholder="Username" aria-label="Username" ng-model="id" ng-readonly="update">
-    </div>
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-key"></i></span>
-        </div>
-        <input type="password" class="form-control" placeholder="Password" aria-label="Password" ng-model="password">
-    </div>
-    </div>
-  </div>
 </div>
 <button type="button" class="btn btn-info btn-block" href="" ng-click="save()">{{action}}</button>

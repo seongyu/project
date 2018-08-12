@@ -1,6 +1,6 @@
 var util = {};
 util.path = __dirname;
-util.groupBy = function (arr, groupFn) {
+util.groupBy = function(arr, groupFn) {
     if (typeof groupFn !== 'function') {
         throw new Error("groupBy take a function as only parameter");
     }

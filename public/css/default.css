@@ -1,57 +1,56 @@
-
-.index-form{
-  margin:12px;
+.index-form {
+    margin: 12px;
 }
 
-.login-checkbox{
-  font-size: 12px;
+.login-checkbox {
+    font-size: 12px;
 }
 
-.login-textInput{
-  font-size: 12px;
-  height: 28px;
+.login-textInput {
+    font-size: 12px;
+    height: 28px;
 }
 
-.login-top{
-  width:100%;
+.login-top {
+    width: 100%;
 }
 
-.menu a{
-  color: black;
-  font-weight: bold;
+.menu a {
+    color: black;
+    font-weight: bold;
 }
 
-.menu a:hover{
-  color: #3d8ab1;
-  font-weight: bold;
+.menu a:hover {
+    color: #3d8ab1;
+    font-weight: bold;
 }
 
-.menu .dropdown-menu{
-  border:0;
-  margin:0;
-  padding:0;
+.menu .dropdown-menu {
+    border: 0;
+    margin: 0;
+    padding: 0;
 }
 
-.login-logo{
+.login-logo {
     position: absolute;
     width: 240px;
     right: 0;
 }
 
-.bg-enes{
-  background-color: #6fac31;
+.bg-enes {
+    background-color: #6fac31;
 }
 
-.navbar-title{
-  color:white;
-  font-size:24px;
+.navbar-title {
+    color: white;
+    font-size: 24px;
 }
 
-.navbar-dropdown{
-  position: absolute;
-  right: 72px;
+.navbar-dropdown {
+    position: absolute;
+    right: 72px;
 }
 
-.navbar-dropdown .nav-link{
-  color:white;
+.navbar-dropdown .nav-link {
+    color: white;
 }

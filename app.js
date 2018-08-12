@@ -13,31 +13,31 @@ var app = express();
 var port = 4001;
 
 // Add Headers
-app.all('*', function(req, res,next) {
-  /**
-   * Response settings
-   * @type {Object}
-   */
-  var responseSettings = {
-    "AccessControlAllowOrigin":'*',
-    "AccessControlAllowHeaders": "Content-Type,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name",
-    "AccessControlAllowMethods": "POST, GET, PUT, DELETE, OPTIONS",
-    "AccessControlAllowCredentials": true
-  };
+app.all('*', function(req, res, next) {
+    /**
+     * Response settings
+     * @type {Object}
+     */
+    var responseSettings = {
+        "AccessControlAllowOrigin": '*',
+        "AccessControlAllowHeaders": "Content-Type,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name",
+        "AccessControlAllowMethods": "POST, GET, PUT, DELETE, OPTIONS",
+        "AccessControlAllowCredentials": true
+    };
 
-  /**
-   * Headers
-   */
-  res.header("Access-Control-Allow-Credentials", responseSettings.AccessControlAllowCredentials);
-  res.header("Access-Control-Allow-Origin",  responseSettings.AccessControlAllowOrigin);
-  res.header("Access-Control-Allow-Headers", (req.headers['access-control-request-headers']) ? req.headers['access-control-request-headers'] : "x-requested-with");
-  res.header("Access-Control-Allow-Methods", (req.headers['access-control-request-method']) ? req.headers['access-control-request-method'] : responseSettings.AccessControlAllowMethods);
+    /**
+     * Headers
+     */
+    res.header("Access-Control-Allow-Credentials", responseSettings.AccessControlAllowCredentials);
+    res.header("Access-Control-Allow-Origin", responseSettings.AccessControlAllowOrigin);
+    res.header("Access-Control-Allow-Headers", (req.headers['access-control-request-headers']) ? req.headers['access-control-request-headers'] : "x-requested-with");
+    res.header("Access-Control-Allow-Methods", (req.headers['access-control-request-method']) ? req.headers['access-control-request-method'] : responseSettings.AccessControlAllowMethods);
 
-  if ('OPTIONS' == req.method) {
-    res.send(200);
-  }else {
-    next();
-  }
+    if ('OPTIONS' == req.method) {
+        res.send(200);
+    } else {
+        next();
+    }
 
 });
 
@@ -56,15 +56,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/register',register);
 app.use('/api', api);
-app.use('/data',register);
-app.use('/',view);
+app.use('/data', register);
+app.use('/', view);
 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -72,26 +72,26 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
     });
-  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 
-app.listen(port,function(){
-  console.log('Server started successfully with : ', port);
+app.listen(port, function() {
+    console.log('Server started successfully with : ', port);
 })

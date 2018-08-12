@@ -40,17 +40,17 @@ exports.querySet = {
         ].join("");
         return tpl;
     },
-    monitor_status_modules: function(devices){
+    monitor_status_modules: function(devices) {
         var tpl = ['select moduleSeq, varStatus from (select * from DeviceLog where moduleSeq in ('];
-        devices.forEach((e)=>{
-            tpl.push(e+', ')
+        devices.forEach((e) => {
+            tpl.push(e + ', ')
         });
-        tpl[tpl.length-1] = tpl[tpl.length-1].slice(0,-2);
+        tpl[tpl.length - 1] = tpl[tpl.length - 1].slice(0, -2);
         tpl.push(' order by eventTime desc) as a group by moduleSeq;');
 
         return tpl.join("");
     },
-    history_create: function(param){
+    history_create: function(param) {
         var sql = 'select * from DeviceLog as a left join DeviceInfo as b on a.moduleSeq = b.moduleSeq';
         var keys = Object.keys(param);
         if (keys.length > 0) {
@@ -74,6 +74,6 @@ exports.querySet = {
         sql = set_where ? sql.slice(0, -4) : sql;
         sql = sql + ' order by eventTime desc;';
 
-        return {sql:sql,param:queryParam};
+        return { sql: sql, param: queryParam };
     }
 }

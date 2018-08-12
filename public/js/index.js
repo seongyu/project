@@ -53,8 +53,8 @@ angular.module('steven.controller', ['n3-line-chart'])
                                 } else {
                                     $scope.svs.push(e);
                                 }
-                                var conpare = Object.values($scope.conpareBox).find((j)=>{return j==e.moduleSeq});
-                                if(conpare){
+                                var conpare = Object.values($scope.conpareBox).find((j) => { return j == e.moduleSeq });
+                                if (conpare) {
                                     _apply_graph(e);
                                 }
                             })
@@ -63,25 +63,25 @@ angular.module('steven.controller', ['n3-line-chart'])
             }
         }
 
-        $scope.setDataset = (moduleSeq,setNo) => {
-          $scope.conpareBox[setNo] = moduleSeq;
-          $scope.data = _dataModel();
+        $scope.setDataset = (moduleSeq, setNo) => {
+            $scope.conpareBox[setNo] = moduleSeq;
+            $scope.data = _dataModel();
         }
 
         _apply_graph = (log) => {
-          Object.keys($scope.conpareBox).forEach((setName)=>{
-            if($scope.conpareBox[setName] == log.moduleSeq){
-              var val = {
-                x : new Date(),
-                varStatus : parseInt(log.varStatus)
-              };
-              $scope.data[setName].push(val);
+            Object.keys($scope.conpareBox).forEach((setName) => {
+                if ($scope.conpareBox[setName] == log.moduleSeq) {
+                    var val = {
+                        x: new Date(),
+                        varStatus: parseInt(log.varStatus)
+                    };
+                    $scope.data[setName].push(val);
 
-              if($scope.data[setName].length>20){
-                $scope.data[setName].shift();
-              }
-            }
-          })
+                    if ($scope.data[setName].length > 20) {
+                        $scope.data[setName].shift();
+                    }
+                }
+            })
         }
 
         $scope.getShortName = (lb) => {
@@ -141,10 +141,10 @@ angular.module('steven.controller', ['n3-line-chart'])
 
         var init = () => {
 
-        if($scope.user.role.indexOf('admin')<0){
-          $scope.companyName = $scope.user.companyName;
-          $scope.selectComp($scope.companyName);
-        }
+            if ($scope.user.role.indexOf('admin') < 0) {
+                $scope.companyName = $scope.user.companyName;
+                $scope.selectComp($scope.companyName);
+            }
             if ($location.absUrl().indexOf('login') > 0) {
                 angular.element('.navbar').hide();
                 angular.element('.menu').css('visibility', 'hidden');
@@ -153,9 +153,9 @@ angular.module('steven.controller', ['n3-line-chart'])
                 angular.element('.menu').css('visibility', 'visible');
             }
 
-            $interval(()=>{
-              _device_monitor();
-            },1000);
+            $interval(() => {
+                _device_monitor();
+            }, 1000);
 
             angular.element('body').show();
         }
@@ -166,100 +166,75 @@ angular.module('steven.controller', ['n3-line-chart'])
 
 
 var _dataModel = () => {
-  return {
-      dataset0: [],
-      dataset1: [],
-      dataset2: [],
-      dataset3: [],
-      dataset4: [],
-      dataset5: [],
-      dataset6: [],
-      dataset7: []
-  }
+    return {
+        dataset0: [],
+        dataset1: [],
+        dataset2: [],
+        dataset3: [],
+        dataset4: [],
+        dataset5: [],
+        dataset6: [],
+        dataset7: []
+    }
 };
 
 var _optionModel = () => {
-  return {
-    margin: {
-  top: 30,
-  right: 30,
-  bottom: 30,
-  left: 30
-},
-      series: [{
-          axis: "y",
-          dataset: "dataset0",
-          key: "varStatus",
-          color: "#ff5d99",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset1",
-          key: "varStatus",
-          color: "#a35dff",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset2",
-          key: "varStatus",
-          color: "#64ffff",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset3",
-          key: "varStatus",
-          color: "#e7f33d",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset4",
-          key: "varStatus",
-          color: "#f3893d",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset5",
-          key: "varStatus",
-          color: "#3d75f3",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset6",
-          key: "varStatus",
-          color: "#e83df3",
-          type: ['line']
-      }, {
-          axis: "y",
-          dataset: "dataset7",
-          key: "varStatus",
-          color: "#3df3b0",
-          type: ['line']
-      }],
-      axes: { x: { key: "x",type: 'date' } ,y:{min: -10,max: 50}}
-  }
+    return {
+        margin: {
+            top: 30,
+            right: 30,
+            bottom: 30,
+            left: 30
+        },
+        series: [{
+            axis: "y",
+            dataset: "dataset0",
+            key: "varStatus",
+            color: "#ff5d99",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset1",
+            key: "varStatus",
+            color: "#a35dff",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset2",
+            key: "varStatus",
+            color: "#64ffff",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset3",
+            key: "varStatus",
+            color: "#e7f33d",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset4",
+            key: "varStatus",
+            color: "#f3893d",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset5",
+            key: "varStatus",
+            color: "#3d75f3",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset6",
+            key: "varStatus",
+            color: "#e83df3",
+            type: ['line']
+        }, {
+            axis: "y",
+            dataset: "dataset7",
+            key: "varStatus",
+            color: "#3df3b0",
+            type: ['line']
+        }],
+        axes: { x: { key: "x", type: 'date' }, y: { min: -10, max: 50 } }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
