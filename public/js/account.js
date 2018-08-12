@@ -19,18 +19,6 @@ angular.module('steven.controller', [])
         $scope.siteFlag = {};
         $scope.deviceFlag = {};
 
-        if ($scope.target && $scope.target.role.indexOf('admin') >= 0) {
-            alert('설정을 변경할 수 없는 계정입니다.');
-            $location.path('/');
-        } else if ($scope.target) {
-            $scope.action = '계정변경';
-            $scope.update = true;
-            $scope.id = $scope.target.id;
-            $scope.companyName = $scope.target.companyName;
-            $scope.flag = $scope.target.flag;
-            $scope.role = $scope.setRole($scope.target.role)
-        };
-
         $scope.selectComp = (companyName) => {
             $scope.siteNames = [];
             $scope.deviceNames = [];
@@ -47,12 +35,13 @@ angular.module('steven.controller', [])
         }
 
         $scope.setRole = (role) => {
-            $scope.role = {
-                mon: indexOf('mon') >= 0 ? true : false,
-                his: indexOf('his') >= 0 ? true : false,
-                con: indexOf('con') >= 0 ? true : false,
-                set: indexOf('set') >= 0 ? true : false
-            }
+            $scope.role = {};
+            $scope.role['mon'] = role.indexOf('mon') >= 0 ? true : false;
+            $scope.role['his'] = role.indexOf('his') >= 0 ? true : false;
+            $scope.role['con'] = role.indexOf('con') >= 0 ? true : false;
+            $scope.role['set'] = role.indexOf('set') >= 0 ? true : false;
+            
+            console.log($scope.role)
         }
 
         $scope.selectSite = (siteName, isAdd) => {
@@ -72,6 +61,8 @@ angular.module('steven.controller', [])
             };
         };
 
+        $scope.test = () => {console.log($scope.role)}
+
         $scope.setFlag = (siteName, deviceName, YN) => {
             if (!YN) {
                 delete $scope.deviceFlag[siteName][deviceName]
@@ -79,9 +70,14 @@ angular.module('steven.controller', [])
         }
 
         $scope.save = () => {
-            if (!$scope.id || $scope.id == '' || !$scope.password || $scope.password == '') {
+            if (!$scope.id || $scope.id == '') {
                 return alert('필수정보가 누락되어있습니다.\n입력내용을 확인하세요.')
             };
+
+            if(!$scope.update && (!$scope.password || $scope.password == '')){
+                return alert('필수정보가 누락되어있습니다.\n입력내용을 확인하세요.')  
+            }
+            
             if (!$scope.companyName || $scope.companyName == '' || $scope.companyName == 'all') {
                 return alert('업체를 선택하지 않으셨습니다.\n입력내용을 확인하세요.')
             }
@@ -117,6 +113,20 @@ angular.module('steven.controller', [])
         }
 
         var init = () => {
+
+            if ($scope.target && $scope.target.role.indexOf('admin') >= 0) {
+                alert('설정을 변경할 수 없는 계정입니다.');
+                $location.path('/');
+            } else if ($scope.target) {
+                $scope.action = '계정변경';
+                $scope.update = true;
+                $scope.id = $scope.target.id;
+                $scope.companyName = $scope.target.companyName;
+                $scope.flag = $scope.target.flag;
+                $scope.setRole($scope.target.role);
+                $scope.selectComp($scope.companyName);
+            };
+
             if ($location.absUrl().indexOf('login') > 0) {
                 angular.element('.navbar').hide();
                 angular.element('.menu').css('visibility', 'hidden');

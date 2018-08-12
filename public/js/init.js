@@ -2,7 +2,12 @@ angular.module('steven', [
         'ngRoute',
         'oc.lazyLoad',
         'ngCookies'
-    ]).config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
+    ]).run(($location,$rootScope)=>{
+        $rootScope.$on('$locationChangeSuccess',(e,newL,oldL) => {
+            $rootScope.$broadcast('refreshHead');
+            $rootScope.$broadcast('refreshMenu');
+        })
+    }).config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
         $routeProvider
             .when('/login', {
                 templateUrl: '/html/login.html',
@@ -70,8 +75,12 @@ angular.module('steven', [
         // $locationProvider.html5mode({ enabled: true, requireBase: true });
 
     }])
-    .controller('headerCtrl', function($scope, $location, $cookies) {
+    .controller('headerCtrl', function($scope, $location, $cookies, $rootScope) {
         $scope.user = $cookies.getObject('user');
+
+        $rootScope.$on('refreshHead',()=>{
+            $scope.user = $cookies.getObject('user');
+        });
 
         $scope.logout = () => {
             sessionStorage.clear();
@@ -86,8 +95,12 @@ angular.module('steven', [
         }
         init()
     })
-    .controller('menuCtrl', function($scope, $location, $cookies) {
+    .controller('menuCtrl', function($scope, $location, $cookies, $rootScope) {
         $scope.user = $cookies.getObject('user');
+
+        $rootScope.$on('refreshMenu',()=>{
+            $scope.user = $cookies.getObject('user');
+        });
 
         $scope.dropOpen = (e) => {
             var target = angular.element(e.target.nextElementSibling)

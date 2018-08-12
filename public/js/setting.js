@@ -45,6 +45,11 @@ angular.module('steven.controller', [])
         }
 
         var init = () => {
+            if ($scope.user.role.indexOf('admin') < 0) {
+                $scope.companyName = $scope.user.companyName;
+                $('#adonly').remove();
+            }
+
             if ($location.absUrl().indexOf('login') > 0) {
                 angular.element('.navbar').hide();
                 angular.element('.menu').css('visibility', 'hidden');

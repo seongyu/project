@@ -2,7 +2,7 @@
  * Created by LeonKim on 18.07.28
  */
 angular.module('steven.controller', [])
-    .controller('loginCtrl', function($scope, $location, $http, $cookies) {
+    .controller('loginCtrl', function($scope, $location, $http, $cookies,$timeout) {
 
         $scope.login = () => {
             sessionStorage.setItem('id', $scope.id);
@@ -13,9 +13,12 @@ angular.module('steven.controller', [])
                 id: $scope.id,
                 password: $scope.password
             }).then((result) => {
+                $cookies.remove('user', result.data.data);
                 if (result.data.status) {
                     $cookies.putObject('user', result.data.data);
-                    $location.path('/');
+                    $timeout(()=>{
+                        $location.path('/');
+                    },200)
                 } else {
                     alert('아이디나 패스워드가 틀렸습니다.\n다시한번 확인해주세요.');
                     sessionStorage.removeItem('id');

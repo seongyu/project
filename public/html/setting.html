@@ -5,7 +5,7 @@
                 <label class="input-group-text">회사</label>
             </div>
             <select class="custom-select" ng-model="companyName" ng-change="selectComp(companyName)">
-                <option value="all">전체</option>
+                <option value="all" id="adonly">전체</option>
                 <option ng-repeat="comp in companyNames">{{comp}}</option>
             </select>
         </div>
