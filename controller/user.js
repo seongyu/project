@@ -6,7 +6,7 @@ var itf = {};
 itf._getParam = (param) => {
     var item = {};
     param.id ? item.id = param.id : null;
-    param.password ? item.password = param.password : null;
+    param.password&&param.password!='' ? item.password = param.password : null;
     param.companyName ? item.companyName = param.companyName : null;
     param.role ? item.role = param.role : null;
     param.flag ? item.flag = param.flag : null;
@@ -25,12 +25,13 @@ itf.create = (param,cb) => {
             cb({status:false});
         }else{
             var _password = sha1(param.password);
-            sql = 'insert into Users (id, password, companyName, role) values (?,?,?,?);';
+            sql = 'insert into Users (id, password, companyName, role,flag) values (?,?,?,?,?);';
             queryParam = [
                 param.id,
                 _password,
                 param.companyName,
-                param.role
+                param.role,
+                param.flag
             ];
             db.query(sql,queryParam)
             .then((rtn) => {
@@ -54,13 +55,14 @@ itf.update = (param,cb) => {
 }
 
 itf.find = (param,cb) => {
+    var response = { status: false, data: [] };
     var sql = 'select * from Users';
     if(param){
         sql = sql + ' where '
         var keys = Object.keys(param);
 
         keys.forEach((e) => {
-            var qr = e + ' = ' + param[e] + ' and ';
+            var qr = e + ' = "' + param[e] + '" and ';
             sql = sql + qr;
         });
 
@@ -68,7 +70,11 @@ itf.find = (param,cb) => {
     }
     db.query(sql)
     .then((rtn)=>{
-        cb({status:true,data:rtn})
+        response.status = true;
+        response.data = rtn;
+        cb(response)
+    },(err)=>{
+        cb(response)
     })
 }
 
@@ -89,6 +95,7 @@ itf.login = (param,cb) => {
                         cb({status:true,data:user});
                     })
                 }else{
+                    user.flag = JSON.parse(user.flag)
                     cb({status:true,data:user});
                 }
                 

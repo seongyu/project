@@ -40,6 +40,30 @@ angular.module('steven',[
                 }]
             }
         })
+        .when('/setting',{
+            templateUrl: '/html/setting.html',
+            controller: 'settingCtrl',
+            resolve: {
+                lazy: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'init First',
+                        files: ['/js/setting.js']
+                    }]);
+                }]
+            }
+        })
+        .when('/account',{
+            templateUrl: '/html/account.html',
+            controller: 'accountCtrl',
+            resolve: {
+                lazy: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'init First',
+                        files: ['/js/account.js']
+                    }]);
+                }]
+            }
+        })
         .otherwise({redirectTo:'/login'});
 
         $locationProvider.hashPrefix('') 
@@ -76,6 +100,10 @@ angular.module('steven',[
 
   $scope.control = () => {
     var ip = sessionStorage.getItem('controlIp');
+    
+    if(!ip || ip=='' || ip=='null'){
+      return alert('컨트롤 IP가 설정되어있지 않습니다.\n설정내용을 확인해주세요.');
+    }
     if(!ip.startsWith('http')){
       ip = 'http://' + ip
     }

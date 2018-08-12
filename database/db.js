@@ -49,5 +49,31 @@ exports.querySet = {
         tpl.push(' order by eventTime desc) as a group by moduleSeq;');
 
         return tpl.join("");
+    },
+    history_create: function(param){
+        var sql = 'select * from DeviceLog as a left join DeviceInfo as b on a.moduleSeq = b.moduleSeq';
+        var keys = Object.keys(param);
+        if (keys.length > 0) {
+            sql = sql + ' where '
+        }
+        var set_where = false;
+        var queryParam = [];
+        keys.forEach((e) => {
+            if (e == 'startDate') {
+                sql = sql + ' eventTime >= ? '
+            } else if (e == 'endDate') {
+                sql = sql + ' eventTime < ? '
+            } else {
+                sql = sql + ' ' + e + ' = ? '
+            };
+            queryParam.push(param[e]);
+            sql = sql + ' and ';
+            set_where = true;
+        });
+
+        sql = set_where ? sql.slice(0, -4) : sql;
+        sql = sql + ' order by eventTime desc;';
+
+        return {sql:sql,param:queryParam};
     }
 }

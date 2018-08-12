@@ -2,22 +2,20 @@
 .index-form{
   margin:12px;
 }
-.index td{
-  padding: .35rem;
-}
-.index th{
-  padding: .35rem;
-}
+
 .login-checkbox{
   font-size: 12px;
 }
+
 .login-textInput{
   font-size: 12px;
   height: 28px;
 }
+
 .login-top{
   width:100%;
 }
+
 .menu a{
   color: black;
   font-weight: bold;

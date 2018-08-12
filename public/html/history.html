@@ -1,11 +1,18 @@
 <nav class="navbar" style="display:inline-flex">
+  <div class="input-group" style="width:60%">
+      <div class="input-group-prepend">
+        <span class="input-group-text">검색기간</span>
+      </div>
+      <input class="form-control" id="dateRange" type="text" ng-model="date" />
+    </div>
+    <button type="button" style="width:30%" class="btn btn-warning" href="" ng-click="download()">액셀 다운로드</button>
     <form class="index-form">
         <div class="input-group">
             <div class="input-group-prepend">
                 <label class="input-group-text">회사</label>
             </div>
             <select class="custom-select" ng-model="companyName" ng-change="selectComp(companyName)">
-                <option value="all">전체</option>
+                <option id="adonly" value="all">전체</option>
                 <option ng-repeat="comp in companyNames">{{comp}}</option>
             </select>
         </div>
@@ -43,10 +50,30 @@
             </select>
         </div>
     </form>
+    <button type="button" class="btn btn-success" href="" ng-click="search()">검색</button>
 </nav>
-<div class="container index">
+<div class="container" style="margin-top:64px">
   <div class="row"> 
-    
+    <table class="table table-bordered table-striped">
+      <thead>
+    <tr>
+      <th scope="col">시설</th>
+      <th scope="col">장비</th>
+      <th scope="col">유형</th>
+      <th scope="col">상태값</th>
+      <th scope="col">시간</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="his in history">
+      <td>{{his.siteName}}</td>
+      <td>{{his.deviceName}}</td>
+      <td>{{his.varLabel}}</td>
+      <td>{{his.varStatus}}</td>
+      <td>{{moment(his.eventTime).format('YYYY-MM-DD HH:mm:ss')}}</td>
+    </tr>
+  </tbody>
+    </table>
   </div>
 </div>
 

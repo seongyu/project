@@ -140,6 +140,11 @@ angular.module('steven.controller', ['n3-line-chart'])
         };
 
         var init = () => {
+
+        if($scope.user.role.indexOf('admin')<0){
+          $scope.companyName = $scope.user.companyName;
+          $scope.selectComp($scope.companyName);
+        }
             if ($location.absUrl().indexOf('login') > 0) {
                 angular.element('.navbar').hide();
                 angular.element('.menu').css('visibility', 'hidden');
@@ -175,6 +180,12 @@ var _dataModel = () => {
 
 var _optionModel = () => {
   return {
+    margin: {
+  top: 30,
+  right: 30,
+  bottom: 30,
+  left: 30
+},
       series: [{
           axis: "y",
           dataset: "dataset0",
@@ -224,7 +235,7 @@ var _optionModel = () => {
           color: "#3df3b0",
           type: ['line']
       }],
-      axes: { x: { key: "x",type: 'date' } ,y:{min: -10,max: 30}}
+      axes: { x: { key: "x",type: 'date' } ,y:{min: -10,max: 50}}
   }
 }
 
