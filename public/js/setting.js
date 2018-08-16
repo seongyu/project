@@ -32,6 +32,7 @@ angular.module('steven.controller', [])
             if (target) {
                 sessionStorage.setItem('flag',JSON.stringify(target.flag));
                 delete target.flag;
+                delete target.password;
 
                 $cookies.putObject('enesTarget', target);
             } else {

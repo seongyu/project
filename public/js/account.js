@@ -98,9 +98,11 @@ angular.module('steven.controller', [])
                 flag: JSON.stringify(flag),
                 role: role,
                 id: $scope.id,
-                companyName: $scope.companyName,
-                password: $scope.password
+                companyName: $scope.companyName
             };
+
+            $scope.password&&$scope.password!=''? user.password = $scope.password : null;
+
             var uri = '/api/user';
             if ($scope.update) {
                 uri = '/api/user/update';
