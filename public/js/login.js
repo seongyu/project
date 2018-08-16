@@ -2,23 +2,27 @@
  * Created by LeonKim on 18.07.28
  */
 angular.module('steven.controller', [])
-    .controller('loginCtrl', function($scope, $location, $http, $cookies,$timeout) {
+    .controller('loginCtrl', function($scope, $location, $http, $cookies, $timeout) {
 
         $scope.login = () => {
             sessionStorage.setItem('id', $scope.id);
             sessionStorage.setItem('password', $scope.password);
-            sessionStorage.setItem('controlIp', $scope.control_ip);
+            localStorage.setItem('controlIp', $scope.control_ip);
 
             $http.post('/api/login', {
                 id: $scope.id,
                 password: $scope.password
             }).then((result) => {
-                $cookies.remove('user', result.data.data);
+                $cookies.remove('enesUser', result.data.data);
                 if (result.data.status) {
-                    $cookies.putObject('user', result.data.data);
+                    localStorage.setItem('flag',JSON.stringify(result.data.data.flag));
+                    delete result.data.data.flag;
+
+                    $cookies.putObject('enesUser', result.data.data);
+
                     $timeout(()=>{
                         $location.path('/');
-                    },200)
+                    },500)
                 } else {
                     alert('아이디나 패스워드가 틀렸습니다.\n다시한번 확인해주세요.');
                     sessionStorage.removeItem('id');
@@ -34,7 +38,7 @@ angular.module('steven.controller', [])
         var init = () => {
             $scope.auto_login = sessionStorage.getItem('autoLogin') == 'true' ? true : false;
 
-            $scope.control_ip = sessionStorage.getItem('control_ip') ? sessionStorage.getItem('control_ip') : null;
+            $scope.control_ip = localStorage.getItem('controlIp') ? localStorage.getItem('controlIp') : null;
 
             if ($scope.auto_login) {
                 $scope.id = sessionStorage.getItem('id') ? sessionStorage.getItem('id') : null;

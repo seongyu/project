@@ -3,8 +3,16 @@
  */
 angular.module('steven.controller', ['n3-line-chart'])
     .controller('indexCtrl', function($scope, $location, $cookies, $http, $interval) {
-        $scope.user = $cookies.getObject('user');
-        $scope.companyNames = Object.keys($scope.user.flag);
+        $scope.user = $cookies.getObject('enesUser');
+        if(!$scope.user){
+            $location.path('/login')
+        };
+        try{
+            $scope.flag = JSON.parse(localStorage.getItem('flag'))
+        }catch(e){
+            alert('접근권한을 구축하는데 오류가 발생했습니다.\n다시 로그인해주세요.')
+        };
+        $scope.companyNames = Object.keys($scope.flag);
         $scope.siteNames = [];
         $scope.deviceNames = [];
         $scope.svs = [];
@@ -90,7 +98,7 @@ angular.module('steven.controller', ['n3-line-chart'])
 
         $scope.selectComp = (companyName) => {
             try {
-                $scope.siteNames = Object.keys($scope.user.flag[companyName]);
+                $scope.siteNames = Object.keys($scope.flag[companyName]);
                 if ($scope.siteNames.length > 0) {
                     angular.element('#siteform').show()
                 }
@@ -102,7 +110,7 @@ angular.module('steven.controller', ['n3-line-chart'])
 
         $scope.selectSite = (siteName) => {
             try {
-                $scope.deviceNames = Object.keys($scope.user.flag[$scope.companyName][siteName]);
+                $scope.deviceNames = Object.keys($scope.flag[$scope.companyName][siteName]);
                 if ($scope.deviceNames.length > 0) {
                     angular.element('#deviceform').show()
                 }

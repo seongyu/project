@@ -6,7 +6,7 @@ angular.module('steven', [
         $rootScope.$on('$locationChangeSuccess',(e,newL,oldL) => {
             $rootScope.$broadcast('refreshHead');
             $rootScope.$broadcast('refreshMenu');
-        })
+        });
     }).config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
         $routeProvider
             .when('/login', {
@@ -76,15 +76,16 @@ angular.module('steven', [
 
     }])
     .controller('headerCtrl', function($scope, $location, $cookies, $rootScope) {
-        $scope.user = $cookies.getObject('user');
+        $scope.user = $cookies.getObject('enesUser');
 
         $rootScope.$on('refreshHead',()=>{
-            $scope.user = $cookies.getObject('user');
+            $scope.user = $cookies.getObject('enesUser');
         });
 
         $scope.logout = () => {
             sessionStorage.clear();
-            $cookies.remove('user');
+            $cookies.remove('enesUser');
+            localStorage.removeItem('flag');
             $location.path('/login')
         }
 
@@ -96,10 +97,10 @@ angular.module('steven', [
         init()
     })
     .controller('menuCtrl', function($scope, $location, $cookies, $rootScope) {
-        $scope.user = $cookies.getObject('user');
+        $scope.user = $cookies.getObject('enesUser');
 
         $rootScope.$on('refreshMenu',()=>{
-            $scope.user = $cookies.getObject('user');
+            $scope.user = $cookies.getObject('enesUser');
         });
 
         $scope.dropOpen = (e) => {
@@ -112,7 +113,7 @@ angular.module('steven', [
         }
 
         $scope.control = () => {
-            var ip = sessionStorage.getItem('controlIp');
+            var ip = localStorage.getItem('controlIp');
 
             if (!ip || ip == '' || ip == 'null') {
                 return alert('컨트롤 IP가 설정되어있지 않습니다.\n설정내용을 확인해주세요.');

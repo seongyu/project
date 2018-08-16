@@ -2,17 +2,23 @@
  * Created by LeonKim on 18.07.28
  */
 angular.module('steven.controller', [])
-    .controller('accountCtrl', function($scope, $location, $cookies, $http) {
+    .controller('accountCtrl', function($scope, $location, $cookies, $timeout, $http) {
         $scope.moment = moment;
 
-        $scope.user = $cookies.getObject('user');
-        $scope.target = $cookies.getObject('target');
-        $scope.flag = {};
+        $scope.user = $cookies.getObject('enesUser');
+        $scope.target = $cookies.getObject('enesTarget');
+        $scope.targetFlag = {};
         $scope.role = {};
-        $scope.action = '계정생성'
+        $scope.action = '계정생성';
         $scope.update = false;
 
-        $scope.companyNames = Object.keys($scope.user.flag);
+        try{
+            $scope.flag = JSON.parse(localStorage.getItem('flag'))
+        }catch(e){
+            alert('접근권한을 구축하는데 오류가 발생했습니다.\n다시 로그인해주세요.')
+        };
+
+        $scope.companyNames = Object.keys($scope.flag);
         $scope.companyName = 'all';
         $scope.siteNames = [];
         $scope.deviceNames = [];
@@ -25,10 +31,10 @@ angular.module('steven.controller', [])
             $scope.siteFlag = {};
             $scope.deviceFlag = {};
             try {
-                $scope.siteNames = Object.keys($scope.user.flag[companyName]);
+                $scope.siteNames = Object.keys($scope.flag[companyName]);
             } catch (e) {};
-            if ($scope.flag[companyName]) {
-                Object.keys($scope.flag[companyName]).forEach((e) => {
+            if ($scope.targetFlag[companyName]) {
+                Object.keys($scope.targetFlag[companyName]).forEach((e) => {
                     $scope.siteFlag[e] = true;
                 })
             };
@@ -40,13 +46,11 @@ angular.module('steven.controller', [])
             $scope.role['his'] = role.indexOf('his') >= 0 ? true : false;
             $scope.role['con'] = role.indexOf('con') >= 0 ? true : false;
             $scope.role['set'] = role.indexOf('set') >= 0 ? true : false;
-            
-            console.log($scope.role)
         }
 
         $scope.selectSite = (siteName, isAdd) => {
             try {
-                var arr = Object.keys($scope.user.flag[$scope.companyName][siteName]);
+                var arr = Object.keys($scope.flag[$scope.companyName][siteName]);
                 if (isAdd) {
                     $scope.deviceNames = $scope.deviceNames.concat(arr);
                 } else {
@@ -54,14 +58,14 @@ angular.module('steven.controller', [])
                     $scope.deviceNames.length == 0 ? $scope.deviceNames = [] : null;
                 }
             } catch (e) { console.log(e) };
-            if ($scope.flag[$scope.companyName] && $scope.flag[$scope.companyName][siteName]) {
-                Object.keys($scope.flag[$scope.companyName][siteName]).forEach((e) => {
+            if ($scope.targetFlag[$scope.companyName] && $scope.targetFlag[$scope.companyName][siteName]) {
+                Object.keys($scope.targetFlag[$scope.companyName][siteName]).forEach((e) => {
                     $scope.deviceFlag[e] = true;
                 })
             };
         };
 
-        $scope.test = () => {console.log($scope.role)}
+        $scope.test = () => {console.log($scope.role)};
 
         $scope.setFlag = (siteName, deviceName, YN) => {
             if (!YN) {
@@ -106,6 +110,10 @@ angular.module('steven.controller', [])
                     var result = res.data;
                     if (result.status) {
                         alert('성공적으로 저장하였습니다.');
+                        $cookies.remove('enesTarget');
+                        $timeout((e)=>{
+                            $location.path('/setting');
+                        });
                     } else {
                         alert('저장에 실패하였습니다.\n다시 시도해주세요.\n문제가 지속적으로 반복된다면 관리자에게 문의해주세요.');
                     }
@@ -122,7 +130,7 @@ angular.module('steven.controller', [])
                 $scope.update = true;
                 $scope.id = $scope.target.id;
                 $scope.companyName = $scope.target.companyName;
-                $scope.flag = $scope.target.flag;
+                $scope.targetFlag = JSON.parse(sessionStorage.getItem('flag'));
                 $scope.setRole($scope.target.role);
                 $scope.selectComp($scope.companyName);
             };
@@ -137,5 +145,5 @@ angular.module('steven.controller', [])
 
             angular.element('body').show();
         }
-        init()
+        init();
     });

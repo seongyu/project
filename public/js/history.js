@@ -3,8 +3,13 @@
  */
 angular.module('steven.controller', ['daterangepicker'])
     .controller('historyCtrl', function($scope, $location, $cookies, $http, $window) {
-        $scope.user = $cookies.getObject('user');
-        $scope.companyNames = Object.keys($scope.user.flag);
+        $scope.user = $cookies.getObject('enesUser');
+        try{
+            $scope.flag = JSON.parse(localStorage.getItem('flag'))
+        }catch(e){
+            alert('접근권한을 구축하는데 오류가 발생했습니다.\n다시 로그인해주세요.')
+        };
+        $scope.companyNames = Object.keys($scope.flag);
 
         $scope.siteName = 'all';
         $scope.deviceName = 'all';
@@ -16,8 +21,8 @@ angular.module('steven.controller', ['daterangepicker'])
 
         if ($scope.user.role.indexOf('admin') < 0) {
             $scope.companyName = $scope.user.companyName;
-            Object.keys($scope.user.flag[$scope.companyName]).forEach((e) => {
-                _devLst = _devLst.concat(Object.keys($scope.user.flag[$scope.companyName]['LeonTest']));
+            Object.keys($scope.flag[$scope.companyName]).forEach((e) => {
+                _devLst = _devLst.concat(Object.keys($scope.flag[$scope.companyName]['LeonTest']));
             })
 
             $('#adonly').remove();
@@ -112,13 +117,13 @@ angular.module('steven.controller', ['daterangepicker'])
 
         $scope.selectComp = (companyName) => {
             try {
-                $scope.siteNames = Object.keys($scope.user.flag[companyName]);
+                $scope.siteNames = Object.keys($scope.flag[companyName]);
             } catch (e) {}
         }
 
         $scope.selectSite = (siteName) => {
             try {
-                $scope.deviceNames = Object.keys($scope.user.flag[$scope.companyName][siteName]);
+                $scope.deviceNames = Object.keys($scope.flag[$scope.companyName][siteName]);
             } catch (e) {}
         }
 

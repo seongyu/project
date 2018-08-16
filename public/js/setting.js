@@ -2,11 +2,17 @@
  * Created by LeonKim on 18.07.28
  */
 angular.module('steven.controller', [])
-    .controller('settingCtrl', function($scope, $location, $cookies, $http) {
+    .controller('settingCtrl', function($scope, $location, $cookies, $http, $timeout) {
         $scope.moment = moment;
 
-        $scope.user = $cookies.getObject('user');
-        $scope.companyNames = Object.keys($scope.user.flag);
+        $scope.user = $cookies.getObject('enesUser');
+        try{
+            $scope.flag = JSON.parse(localStorage.getItem('flag'))
+        }catch(e){
+            alert('접근권한을 구축하는데 오류가 발생했습니다.\n다시 로그인해주세요.')
+        };
+
+        $scope.companyNames = Object.keys($scope.flag);
         $scope.companyName = 'all';
 
         $scope.search = () => {
@@ -24,11 +30,16 @@ angular.module('steven.controller', [])
 
         $scope.add = (target) => {
             if (target) {
-                $cookies.putObject('target', target);
+                sessionStorage.setItem('flag',JSON.stringify(target.flag));
+                delete target.flag;
+
+                $cookies.putObject('enesTarget', target);
             } else {
-                $cookies.remove('target');
+                $cookies.remove('enesTarget');
             }
-            $location.path('/account');
+            $timeout((e)=>{
+                $location.path('/account');
+            },300);
         }
 
         $scope.getRole = (role) => {
