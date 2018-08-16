@@ -24,7 +24,7 @@ var _register = (param, cb) => {
                 res_itf.moduleSeq = res[0].moduleSeq;
                 cb(res_itf)
             } else {
-                sql = 'insert into DeviceInfo (varAddr, varLabel, companyName, siteName) values (?,?,?,?,?);';
+                sql = 'insert into DeviceInfo (deviceName, varAddr, varLabel, companyName, siteName) values (?,?,?,?,?);';
 
                 db.query(sql, queryParam).then((res) => {
                     res_itf.status = true;
