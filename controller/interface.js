@@ -40,14 +40,23 @@ var _register = (param, cb) => {
 };
 
 var _writeLog = (param, cb) => {
-    var sql = 'insert into DeviceLog (moduleSeq, varStatus) values (?,?);';
-    var queryParam = [param.moduleSeq, param.varStatus];
-    db.query(sql, queryParam)
-        .then((res) => {
+    db.query('select varStatus from DeviceLog where moduleSeq = ? order by eventTime desc limit 1;', param.moduleSeq)
+    .then((rtn)=>{
+        if(rtn.length == 1 && rtn[0].varStatus==param.varStatus){
             cb({ status: true })
-        }, (err) => {
-            cb({ status: false })
-        })
+        }else{
+            var sql = 'insert into DeviceLog (moduleSeq, varStatus) values (?,?);';
+            var queryParam = [param.moduleSeq, param.varStatus];
+            db.query(sql, queryParam)
+                .then((res) => {
+                    cb({ status: true })
+                }, (err) => {
+                    cb({ status: false })
+                })
+        }
+    }, (err) => {
+        cb({ status: false })
+    })
 };
 
 // for Device to get Data
@@ -183,16 +192,19 @@ itf.get_addr_table = (cb) => {
 }
 
 var test = (param, cb) => {
-    var sql = 'update DeviceInfo set ? where varLabel = ?';
-    db.query(sql, [param, param.varLabel])
-        .then((rtn) => {
-            cb({ status: true });
-        }, (err) => {
-            console.log(err)
-            cb({ status: false });
-        })
+    db.query('select varStatus from DeviceLog where moduleSeq = ? order by eventTime desc limit 1;',32)
+    .then((e)=>{
+        console.log(e)
+    })
+    // var sql = 'update DeviceInfo set ? where varLabel = ?';
+    // db.query(sql, [param, param.varLabel])
+    //     .then((rtn) => {
+    //         cb({ status: true });
+    //     }, (err) => {
+    //         console.log(err)
+    //         cb({ status: false });
+    //     })
 }
-
 // test(testData,(res)=>{
 //     console.log(res)
 // })
