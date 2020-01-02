@@ -31,7 +31,9 @@
         <td>{{item.insertDt}}</td>
         <td>{{item.editDt}}</td>
         <td>{{item.etc}}</td>
-        <td>EXECUTE</td>
+        <td><router-link :to="'/Beacon/'+item.tag"><i class="
+glyphicon glyphicon-info-sign"></i></router-link><router-link :to="'/Beacon/'+item.tag+'?type=update'"><i class="
+glyphicon glyphicon-pencil"></i></router-link></td>
       </tr>
     </template>
     <template v-slot:cfoot>

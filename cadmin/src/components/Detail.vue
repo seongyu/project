@@ -23,6 +23,7 @@ export default {
       return {
         vuetype:'read',
         readonly : false,
+        type : location.pathname.split('/')[1],
         titles:[],
         loc:localize,
         target : {
@@ -47,8 +48,9 @@ export default {
     }},
     async mounted (){
       this.titles = Object.keys(this.target);
-      //var _url = [this.$apiUrl,'/device/',]
-      //var result = await this.$http.get('http://localhost:8511/device/');
+      //var _url = [this.$apiUrl,'/device/',this.$route.params.id].join("");
+      //var result = await this.$http.get(_url);
+      //console.log(result);
       if(this.$route.params.id=='new'){
         this.vuetype = 'write';
 
@@ -75,7 +77,6 @@ export default {
         if(!item.mac_address||!item.registrater||!item.registered_date||!item.device_id){
           return alert("YOU SHOULD INSERT ALL FEILD!")
         }
-        var type = location.pathname.split('/')[1]; //Scanner or Beacon
 
         var _data = {
           ip_address : item.ip_address,
@@ -85,7 +86,7 @@ export default {
 
         var _send_data = {
           device_id : item.mac_address,
-          device_type : type,
+          device_type : this.type,
           device_model_name : item.device_id,
           data : JSON.stringify(_data)
         }
