@@ -1,0 +1,21 @@
+/* for glyphicons */
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
+html,body,#app {
+    font-size:100%;
+    height: 100%;
+}
+/* #app {
+    visibility: hidden;
+} */
+
+.table{
+    margin-top: 1em;
+    background-color:white;
+  }
+
+  .half {
+    width: 50%;
+  }
+  th,td{
+    text-align: center
+  }

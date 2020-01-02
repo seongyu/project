@@ -1,0 +1,24 @@
+{
+    "tag": "태그",
+    "device_id": "장치명",
+    "macaddr": "맥어드레스",
+
+    "mac_address" : "맥어드레스",
+    "ip_address" : "IP 어드레스",
+    "registrater" : "등록자",
+    "registered_date" : "등록일",
+
+    "ipaddr": "IP 어드레스",
+    "installDt": "설치일",
+    "installLoc": "설치장소",
+    "insertor": "등록자",
+    "insertDt": "등록일",
+    "editor": "수정자",
+    "editDt": "수정일",
+    "etc": "비고",
+    "maxBuffer": "최대버퍼크기",
+    "rssi": "최소유효신호",
+    "avlDistence": "최대유효거리",
+    "envPoint": "환경계수",
+    "method": "측위방법"
+}

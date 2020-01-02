@@ -1,0 +1,20 @@
+{
+    "MODE":"INTERNAL",
+    "INTERNAL":{
+        "cassandraConfig": {
+            "contactPoints": [
+                "localhost"
+            ],
+            "keyspace": "inverse_v2"
+        }
+    },
+    "EXTERNAL":{
+        "cassandraConfig": {
+            "contactPoints": [
+                "34.235.134.208"
+            ],
+            "keyspace": "inverse_v2"
+        }
+    },
+    "port":8511
+}

@@ -1,0 +1,8 @@
+{
+    "device":{
+        "getMonitor":"select * from device_infos join device_rows on device_infos.deviceId=device_rows.deviceId where device_infos.deviceId='%s'"
+    },
+    "create":{
+        "users":"CREATE TABLE IF NOT EXISTS users ( email text, password text, user_id text, register_dt timestamp, login_dt timestamp, PRIMARY KEY (email))"
+    }
+}
