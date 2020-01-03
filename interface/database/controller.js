@@ -9,7 +9,7 @@ var controller = {
     client : null,
     queryset : queryset,
     keyspace : null,
-    defaultForm = {
+    defaultForm : {
         get : 'select * from %s where %s',
         ins : 'insert into %s (%s) values (%s)',
         udt : 'update %s set %s where %s',
@@ -60,9 +60,8 @@ controller.defaultQuery = async function(data,type){
         status : false,
         data : null
     };
-
     var sql = '';
-    var table = controller.keyspace+data.table;
+    var table = controller.keyspace+'.'+data.table;
     var keys, wheres, sql, where_value = '', key_value = '';
 
     try{
@@ -75,7 +74,7 @@ controller.defaultQuery = async function(data,type){
     }catch(e){
         wheres = [];
     }
-
+    
     if(type=='ins'){
         sql = controller.defaultForm.ins;
         key_value = keys.join(", ");
@@ -89,7 +88,11 @@ controller.defaultQuery = async function(data,type){
     }else if(type=='udt'){
         sql = controller.defaultForm.udt;
         for(var i in keys){
-            key_value += keys[i]+'='+'\''+data.set[keys[i]]+'\', '
+            if(keys[i]=='status'){
+                key_value += keys[i]+'='+'\''+data.set[keys[i]]+'\', '
+            }else{
+                key_value += keys[i]+'='+data.set[keys[i]]+', '
+            }
         };
 
         // for device update, add modified_time
@@ -115,6 +118,7 @@ controller.defaultQuery = async function(data,type){
         }
 
         sql = util.format(sql,table,where_value);
+        sql = [sql,' ALLOW FILTERING'].join("");
     }else if(type=='del'){
         sql = controller.defaultForm.del;
 
@@ -126,7 +130,14 @@ controller.defaultQuery = async function(data,type){
         sql = util.format(sql,table,where_value);
     }
 
-    var err,rs = await controller.client.execute(sql);
+    try{
+        console.log(sql);
+        var err,rs = await controller.client.execute(sql);
+        console.log('success : ',rs['rows']);
+    }catch(e){
+        console.log(e)
+    }
+    
     if(err){
         result.data = err;
     }else{
@@ -137,8 +148,8 @@ controller.defaultQuery = async function(data,type){
     return result;
 }
 
-var cassandraControl = async ()=>{
-    controller.client = await new cassandra.Client(config[mode]['cassandraConfig']);
+var cassandraControl = ()=>{
+    controller.client = new cassandra.Client(config[mode]['cassandraConfig']);
     controller.keyspace = config[mode]['cassandraConfig']['keyspace'];
     return controller
 }

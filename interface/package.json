@@ -12,6 +12,7 @@
   "author": "LeonKim",
   "license": "ISC",
   "dependencies": {
+    "cassandra-driver": "^4.3.1",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1"
   }

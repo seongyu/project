@@ -1,16 +1,19 @@
 const express = require('express');
 const util = require('util');
-const dbcontrol = require('../database/controller');
+const dbcontrol = require('../database/controller')();
 const queryset = require('../database/query');
-
 const router = express.Router();
 var param, _data, rs, query;
 
 var handler = {
     getLists : async (req,res) => {
         try{
+            var _device_type = req.query.type;
             _data = {
-                table : 'device_infos'
+                table : 'device_infos',
+                where : {
+                    device_type : _device_type
+                }
             }
             rs = await dbcontrol.defaultQuery(_data,'get');
         }catch(e){
@@ -24,15 +27,15 @@ var handler = {
             _data = {
                 table : 'device_infos',
                 where : {
-                    deviceId : req.param.deviceId
+                    device_id : req.params.deviceId
                 }
             }
             rs = await dbcontrol.defaultQuery(_data,'get');
         }catch(e){
             rs = false;
-        }finally{
-            res.send(rs);
         }
+        
+        res.send(rs);
     },
     monitor : async (req,res) => {
         try{
@@ -70,7 +73,7 @@ var handler = {
                 table : 'device_infos',
                 set : param,
                 where : {
-                    deviceId : req.param.deviceId
+                    device_id : req.params.deviceId
                 }
             }
             rs = await dbcontrol.defaultQuery(_data,'udt');
@@ -86,7 +89,7 @@ var handler = {
             _data = {
                 table : 'device_infos',
                 where : {
-                    deviceId : req.param.deviceId
+                    device_id : req.params.deviceId
                 }
             }
             rs = await dbcontrol.defaultQuery(_data,'del');

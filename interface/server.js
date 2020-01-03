@@ -32,7 +32,6 @@ app.all('*', function(req, res, next) {
     } else {
         next();
     }
-
 });
 
 app.use(express.json());
@@ -43,18 +42,18 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // routers
-// const devices = require('./apis/devices');
+const device = require('./apis/device');
 
-// app.use('/devices',devices);
-app.post('/test',(req,res)=>{
-    var result = {
-        data : 'result',
-        result : 'abcd',
-        id : 'CaScc'
-    };
+app.use('/device',device);
+// app.post('/test',(req,res)=>{
+//     var result = {
+//         data : 'result',
+//         result : 'abcd',
+//         id : 'CaScc'
+//     };
 
-    res.send(result);
-})
+//     res.send(result);
+// })
 
 
 
