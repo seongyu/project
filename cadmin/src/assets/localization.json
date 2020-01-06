@@ -5,12 +5,12 @@
     "device_id": "장치명",
     "macaddr": "맥어드레스",
     "exec":"실행",
-
+    "collect_time" : "수집시간",
     "mac_address" : "맥어드레스",
     "ip_address" : "IP 어드레스",
     "registerer" : "등록자",
     "registered_date" : "등록일",
-
+    "version": "버전",
     "status":"상태",
     "replace_date":"교체일",
     "ipaddr": "IP 어드레스",
@@ -25,5 +25,9 @@
     "rssi": "최소유효신호",
     "avlDistence": "최대유효거리",
     "envPoint": "환경계수",
-    "method": "측위방법"
+    "method": "측위방법",
+    "uuid": "UUID",
+    "battery_level": "베터리상태",
+
+    "location": "위치"
 }

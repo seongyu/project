@@ -43,8 +43,12 @@ app.use(cookieParser());
 
 // routers
 const device = require('./apis/device');
+const anchor = require('./apis/anchor');
+const map = require('./apis/map');
 
 app.use('/device',device);
+app.use('/anchor',anchor);
+app.use('/map',map);
 // app.post('/test',(req,res)=>{
 //     var result = {
 //         data : 'result',

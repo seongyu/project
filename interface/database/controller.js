@@ -22,7 +22,6 @@ controller.query = async (sql) => {
         status : false,
         data : null
     };
-
     var err,rs = await controller.client.execute(sql);
     if(err){
         result.data = err;
@@ -78,11 +77,17 @@ controller.defaultQuery = async function(data,type){
     if(type=='ins'){
         sql = controller.defaultForm.ins;
         key_value = keys.join(", ");
-        where_value = "'"+Object.values(data.set).join("', '")+"'";
+        for(var i in keys){
+            if(keys[i]!='status'){
+                where_value = where_value + "'" + data.set[keys[i]] + "', ";
+            }else{
+                where_value = where_value + data.set[keys[i]]+', ';
+            }
+        }
 
         // for device insert, add registered_time
         key_value = key_value + ", registered_time";
-        where_value = where_value + ", now()";
+        where_value = where_value + "now()";
 
         sql = util.format(sql,table,key_value,where_value);
     }else if(type=='udt'){

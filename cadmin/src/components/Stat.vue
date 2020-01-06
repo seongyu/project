@@ -19,14 +19,15 @@
     </template>
     <template v-slot:cbody>
       <tr>
-        <th v-for="title in lists.title" v-bind:key="title.title">{{title}}</th>
+        <th v-for="title in lists.title" v-bind:key="title.title">{{loc[title]}}</th>
       </tr>
       <tr v-for="item in lists.item" v-bind:key="item.$id">
         <td>{{item.tag}}</td>
-        <td>{{item.detactLoc}}</td>
-        <td>{{item.status}}</td>
-        <td>{{item.updateDT}}</td>
-        <td>{{item.destance}}</td>
+        <td>{{item.rssi}}</td>
+        <td>{{item.version}}</td>
+        <td>{{item.battery_level}}</td>
+        <td>{{item.location}}</td>
+        <td>{{item.collect_time}}</td>
       </tr>
     </template>
     <template v-slot:cfoot>
@@ -45,6 +46,8 @@
 <script>
 import TableLayout from "../layout/TableLayout.vue";
 import moment from 'moment';
+import _util from "../assets/util.js";
+import localize from "../assets/localization.json";
 import $ from 'jquery';
 
 export default {
@@ -54,33 +57,60 @@ export default {
     return {
       title: "Statistics",
       search:'',
+      loc: localize,
+      sub : location.pathname.split('/')[2],
       lists:{title:[
-        '테그','감지위치','상태','갱신일시','거리(M)'
+        'tag','rssi','version','battery_level', 'location','collect_time'
       ],
       tpage:1,
       page:1,
       item:[
         {
-          tag : 'CAZXD',
-          detactLoc : 'somewhere',
-          status:'OUT',
-          updateDT:moment(new Date()).format("YYYY-MM-DD"),
-          destance : 2.5
+          tag : null,
+          rssi : null,
+          version:null,
+          battery_level:null,
+          location : null,
+          collect_time : null
         }
       ]}
     };
   },
-  mounted (){
-    this.sub = location.pathname.split('/')[2];
+  async mounted (){
     this.title = String(this.sub).toUpperCase() + ' ' + this.title;
-    // if(this.sub==='beacon'){
-    //   this.lists.title.splice(2,0,'상태');
-    //   $('.status').show();
-    // }else{
-    //   if(this.lists.title.length==5){
-    //     this.lists.title.splice(2,1)
-    //   }
-    // }
+    var _url, _raw, _it, items=[], item, i, _r;
+
+    _url = [this.$apiUrl, "/anchor/raws"].join("");
+    _raw = await this.$http.get(_url);
+    for(i in _raw.data){  
+      _it = _raw.data[i];
+      item = {
+        tag : _it.mac,
+        rssi : _it.rssi,
+        version : _it.majorVer + ':' + _it.minorVer,
+        battery_level : _it.battLevel + '%',
+        location : 'wait',
+        collect_time : 'wait'
+      }
+      items.push(item);
+    }
+    this.lists.item = items;
+
+    for(i in items){
+      _it = items[i];
+      _url = [this.$apiUrl, "/map/tag/position/"+_it['tag']].join("");
+      try{
+        _raw = await this.$http.get(_url);
+        if(_raw&&_raw.data&&_raw.data.length>0){
+          _r = _raw.data[0];
+          items[i].location = _r['x']+', '+_r['y'];
+          items[i].collect_time = moment(_util.timeparser(_r.collect_time)).format("YYYY-MM-DD")
+        }
+      }catch(e){
+        continue;
+      }
+    }
+    this.lists.item = items;
   },
   methods : {
     pageEvent : (n)=>{

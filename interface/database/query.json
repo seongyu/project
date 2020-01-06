@@ -4,5 +4,11 @@
     },
     "create":{
         "users":"CREATE TABLE IF NOT EXISTS users ( email text, password text, user_id text, register_dt timestamp, login_dt timestamp, PRIMARY KEY (email))"
+    },
+    "anchor":{
+        "getRawData":"select data from anchor_raw_data2 limit 1"
+    },
+    "map":{
+        "getTagPosition":"select * from map_tag_position_last where tag_id='%s' limit 1 ALLOW FILTERING"
     }
 }
