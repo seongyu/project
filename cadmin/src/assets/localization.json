@@ -1,6 +1,10 @@
 {
     "index":"순번",
 
+    "zone_id": "존ID",
+    "map_name": "맵이름",
+    "enabled": "활성",
+    "distance": "거리",
     "tag": "태그",
     "device_id": "장치명",
     "macaddr": "맥어드레스",
