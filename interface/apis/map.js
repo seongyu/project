@@ -65,7 +65,6 @@ var handler = {
                 }
             }
             rs = items;
-            console.log(rs);
         } catch (e) {
             console.log(e);
             rs = false;

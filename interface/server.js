@@ -64,15 +64,6 @@ app.post('/hash',(req,res)=>{
     }
     res.send(_data);
 })
-// app.post('/test',(req,res)=>{
-//     var result = {
-//         data : 'result',
-//         result : 'abcd',
-//         id : 'CaScc'
-//     };
-
-//     res.send(result);
-// })
 
 app.listen(port,_=>{
     console.log(`server started with ${port}`)

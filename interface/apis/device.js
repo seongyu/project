@@ -63,7 +63,6 @@ var handler = {
                     _r = _rs.find(_ => {
                     return _.mac == _it.device_id;
                     });
-                    console.log(_r);
                     if (_r) {
                         rs.data[i]["rssi"]= _r.rssi;
                         rs.data[i]["version"] = _r.majorVer + ':' + _r.minorVer,
