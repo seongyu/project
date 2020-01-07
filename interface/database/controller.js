@@ -86,7 +86,11 @@ controller.defaultQuery = async function(data,type){
         }
 
         // for device insert, add registered_time
-        key_value = key_value + ", registered_time";
+        if(data.table=='zone'){
+            key_value = key_value + ", created_time";
+        }else{
+            key_value = key_value + ", registered_time";
+        }
         where_value = where_value + "now()";
 
         sql = util.format(sql,table,key_value,where_value);
@@ -133,12 +137,11 @@ controller.defaultQuery = async function(data,type){
         where_value = where_value.slice(0,-5);
 
         sql = util.format(sql,table,where_value);
+        // sql = [sql,' ALLOW FILTERING'].join("");
     }
 
     try{
-        console.log(sql);
         var err,rs = await controller.client.execute(sql);
-        console.log('success : ',rs['rows']);
     }catch(e){
         console.log(e)
     }

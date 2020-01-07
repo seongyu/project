@@ -6,6 +6,8 @@ const port = process.env.PORT || config.port;
 
 const app = express();
 
+const sha256 = require("sha256");
+
 // Add Headers / for cross-browsing
 app.all('*', function(req, res, next) {
     /**
@@ -49,6 +51,19 @@ const map = require('./apis/map');
 app.use('/device',device);
 app.use('/anchor',anchor);
 app.use('/map',map);
+
+
+var _server_key = 'inverse';
+app.post('/hash',(req,res)=>{
+    var _param = req.body, _data;
+
+    if(_param.name&&_param.email){
+        _data = sha256(_param.name+_param.email+_server_key);
+    }else{
+        _data = null
+    }
+    res.send(_data);
+})
 // app.post('/test',(req,res)=>{
 //     var result = {
 //         data : 'result',
@@ -58,9 +73,6 @@ app.use('/map',map);
 
 //     res.send(result);
 // })
-
-
-
 
 app.listen(port,_=>{
     console.log(`server started with ${port}`)

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    MainPage
+  <div class="full-screen">
+    Loading...
   </div>
 </template>
 
@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style scoped>
-
+.full-screen {
+  margin:20%;
+}
 </style>

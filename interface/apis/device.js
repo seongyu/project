@@ -3,20 +3,43 @@ const util = require('util');
 const dbcontrol = require('../database/controller')();
 const queryset = require('../database/query');
 const router = express.Router();
-var param, _data, rs, query;
+var param, _data, rs, query, _device_type, _rs, i, _it;
 
 var handler = {
     getLists : async (req,res) => {
         try{
-            var _device_type = req.query.type;
-            _data = {
-                table : 'device_infos',
-                where : {
-                    device_type : _device_type
+            _device_type = req.query.type;
+            if(_device_type){
+                _data = {
+                    table : 'device_infos',
+                    where : {
+                        device_type : _device_type
+                    }
+                }
+            }else{
+                _data = {
+                    table : 'device_infos'
                 }
             }
+            
             rs = await dbcontrol.defaultQuery(_data,'get');
+
+            if(rs.data.length>0&&_device_type=='Beacon'){
+                _rs = await dbcontrol.query(queryset.anchor.getRawData);
+                _rs = JSON.parse(_rs.data[0].data);
+                for(i in rs.data){
+                    _it = rs.data[i];
+                    _r = _rs.find(_ => {
+                    return _.mac == _it.device_id;
+                    });
+                    if (_r) {
+                        rs.data[i]["battery_level"] = _r["battLevel"];
+                    }
+                }
+            }
+
         }catch(e){
+            console.log(e);
             rs = false;
         }finally{
             res.send(rs);
@@ -31,7 +54,27 @@ var handler = {
                 }
             }
             rs = await dbcontrol.defaultQuery(_data,'get');
+
+            if(rs.data.length>0&&rs.data[0].device_type=='Beacon'){
+                _rs = await dbcontrol.query(queryset.anchor.getRawData);
+                _rs = JSON.parse(_rs.data[0].data);
+                for(i in rs.data){
+                    _it = rs.data[i];
+                    _r = _rs.find(_ => {
+                    return _.mac == _it.device_id;
+                    });
+                    console.log(_r);
+                    if (_r) {
+                        rs.data[i]["rssi"]= _r.rssi;
+                        rs.data[i]["version"] = _r.majorVer + ':' + _r.minorVer,
+                        rs.data[i]["uuid"] = _r.UUID;
+                        rs.data[i]["battery_level"] = _r["battLevel"] + '%';
+                    }
+                }
+            }
+
         }catch(e){
+            console.log(e)
             rs = false;
         }
         

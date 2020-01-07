@@ -4,6 +4,7 @@ import Beacon from './components/Beacon.vue'
 import Detail from './components/Detail.vue'
 import Scanner from './components/Scanner.vue'
 import MnReal from './components/Monitor/Real.vue'
+import Main from './components/Main.vue'
 import MnBeacon from './components/Monitor/Beacon.vue'
 import Zone from './components/Zone.vue'
 import Maps from './components/Map.vue'
@@ -11,6 +12,10 @@ import Monitor from './components/Monitor.vue'
 import Stat from './components/Stat.vue'
 
 const routes = [
+  {
+    path: '/Main',
+    component: Main
+  },
   {
     path: '/Dashboard',
     component: Dashboard
@@ -59,20 +64,8 @@ const routes = [
     path: '/Default',
     component: Default
   },
-  // {
-  //   path: '/admin',
-  //   component: Layout,
-  //   redirect: '/admin/stats',
-  //   children: [
-  //     {
-  //       path: 'overview',
-  //       name: 'overview',
-  //       component: Overview
-  //     }
-  //   ]
-  // },
   { path: '/*', 
-    redirect: '/Dashboard'
+    redirect: '/Main'
   }
 ]
 

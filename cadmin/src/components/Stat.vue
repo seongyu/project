@@ -11,7 +11,7 @@
           type="text"
           class="form-control"
           aria-label="Default"
-          placeholder="Search"
+          placeholder="Search by TAG"
           aria-describedby="inputGroup-sizing-default"
           v-model="search"
         />
@@ -21,7 +21,7 @@
       <tr>
         <th v-for="title in lists.title" v-bind:key="title.title">{{loc[title]}}</th>
       </tr>
-      <tr v-for="item in lists.item" v-bind:key="item.$id">
+      <tr v-for="item in lists.item" v-bind:key="item.$id" v-show="item.tag.startsWith(search)">
         <td>{{item.tag}}</td>
         <td>{{item.rssi}}</td>
         <td>{{item.version}}</td>
